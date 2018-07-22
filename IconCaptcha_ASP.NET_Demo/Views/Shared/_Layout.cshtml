@@ -1,0 +1,46 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <meta name="author" content="Fabian Wennink © @DateTime.Now.Year" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+</head>
+<body>
+    <div class="container">
+        <div class="logo-text">
+            <a href="https://github.com/fabianwennink/IconCaptcha-Plugin-ASP.NET/" target="_blank">
+                Ic<span>o</span>nCaptcha
+            </a>
+        </div>
+
+        <div class="shields">
+            <img src="https://img.shields.io/badge/Version-2.4.0-orange.svg?style=flat-square" /> <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" />
+            <img src="https://img.shields.io/badge/Maintained-Yes-green.svg?style=flat-square" /> <a href="https://paypal.me/nlgamevideosnl" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-yellow.svg?style=flat-square" /></a>
+        </div>
+
+        @RenderBody()
+
+        <div class="copyright">
+            <p>Copyright &copy; @DateTime.Now.Year Fabian Wennink - All rights reserved</p>
+            <p><small>IconCaptcha is licensed under MIT.</small></p>
+        </div>
+    </div>
+
+    <a href="https://github.com/fabianwennink/IconCaptcha-Plugin-ASP.NET/">
+        <div class="corner-ribbon top-left">
+            STAR ME ON GITHUB
+        </div>
+    </a>
+
+    <!-- Include Google Font - Just for demo page -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,700" rel="stylesheet">
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/icon-captcha")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
