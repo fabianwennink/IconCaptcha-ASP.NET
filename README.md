@@ -3,7 +3,7 @@
 [![Version](https://img.shields.io/badge/Version-1.0.0-orange.svg?style=flat-square)]() [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)]() [![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg?style=flat-square)]()
 [![Donate](https://img.shields.io/badge/Donate-PayPal-yellow.svg?style=flat-square)](https://paypal.me/nlgamevideosnl)
 
-<br><img src="http://i.imgur.com/RMUALSz.png" />
+<br>![IconCaptcha Logo](http://i.imgur.com/RMUALSz.png)
 
 IconCaptcha is a faster and more user-friendly captcha than most other captchas. You no longer have to read any annoying 
 text-images, with IconCaptcha you only have to compare two images and select the image which is only present once.
@@ -11,14 +11,14 @@ text-images, with IconCaptcha you only have to compare two images and select the
 Besides being user-friendly, IconCaptcha is also developer-friendly. With just a few steps you can get the captcha up and running. 
 Even developers new to ASP.NET can easily install IconCaptcha. The demo web application contains all the code needed to get the captcha working.
 
-<img src="https://i.imgur.com/IO5XyPV.jpg" /> <img src="https://i.imgur.com/tp7028J.jpg" />
+![Preview Light](https://i.imgur.com/IO5XyPV.jpg) ![Preview Dark](https://i.imgur.com/tp7028J.jpg)
 ___
 
-### <a href="https://github.com/fabianwennink/IconCaptcha-Plugin-ASP.NET/releases">Download IconCaptcha for ASP.NET now</a>
-### <a href="https://www.fabianwennink.nl/projects/IconCaptcha/v2/">View live demo</a>
+### [Download IconCaptcha for ASP.NET now](https://github.com/fabianwennink/IconCaptcha-Plugin-ASP.NET/releases)
+### [View live demo](https://www.fabianwennink.nl/projects/IconCaptcha/v2/)
 ___
 
-##### <a href="https://github.com/fabianwennink/IconCaptcha-Plugin-jQuery-PHP/releases">Visit IconCaptcha for PHP here.</a>
+##### [Visit IconCaptcha for PHP here.](https://github.com/fabianwennink/IconCaptcha-Plugin-jQuery-PHP/releases)
 ___
 
 ## Features
@@ -38,15 +38,25 @@ _Note: Other .NET framework and ASP.NET versions may work, however the code was 
 
 ## Installation
 
-__A NuGet package will soon be available.__
+### __Install via NuGet:__
+1. Install IconCaptcha with NuGet by executing one of the following commands:
 
-1. Download <a href="https://github.com/fabianwennink/IconCaptcha-Plugin-ASP.NET/releases">IconCaptcha for ASP.NET</a>.
-2. Download the <a href="https://github.com/fabianwennink/IconCaptcha-Plugin-Front-End/releases">IconCaptcha Front-End package</a>.
+* Package Manager: ```Install-Package IconCaptcha```
+* .NET CLI: ```dotnet add package IconCaptcha```
+
+2. Change the namespace of the ```Controllers/CaptchaController.cs``` to your liking.
+3. Change the ```icon-captcha-main.js``` file settings to your liking, make sure the _captchaAjaxFile_ setting is set correctly.
+4. Include ```~/Scripts/icon-captcha.min.js```, ```~/Scripts/icon-captcha-main.js``` and ```~/Content/icon-captcha.css``` into your layout by either adding them to the ```App_Start/BundleConfig.cs``` or by adding them directly into the HTML.
+
+
+### __Install manually:__
+1. Download [IconCaptcha for ASP.NET](https://github.com/fabianwennink/IconCaptcha-Plugin-ASP.NET/releases).
+2. Download the [IconCaptcha Front-End package](https://github.com/fabianwennink/IconCaptcha-Plugin-Front-End/releases).
 3. Unpack both repositories to somewhere on your computer.
 4. Drag the content of the ```dist/css/``` and ```dist/icons/``` folders of the IconCaptcha Front-End package into the ```Content/``` folder of your ASP.NET Web Application.
 5. Drag the content of the ```dist/js/``` folder of the IconCaptcha Front-End package into the ```Scipts/``` folder of your ASP.NET Web Application.
 6. Create a new ```icon-captcha-main.js``` script containing the IconCaptcha script initializer (see demo webapp): ```$('.captcha-holder').iconCaptcha();```
-7. Include ```~/Scripts/icon-captcha.min.js```, ```~/Scripts/icon-captcha-main.js``` and ```~/Content/icon-captcha.css``` into your layout by either adding them to the ```App_Start/BundlesConfig.cs``` or by adding them directly into the HTML.
+7. Include ```~/Scripts/icon-captcha.min.js```, ```~/Scripts/icon-captcha-main.js``` and ```~/Content/icon-captcha.css``` into your layout by either adding them to the ```App_Start/BundleConfig.cs``` or by adding them directly into the HTML.
 8. Build the code inside of the ```IconCaptcha/``` folder and add the generated .DLL to your ASP.NET Web Application's references _(Solution -> Add -> Reference -> Browse -> Select IconCaptcha.dll)_.
 9. Copy the code from the ```Controllers/CaptchaController.cs``` or write your own validation implementation.
 
@@ -129,7 +139,7 @@ Events will be triggered at various point in the code. You can use a custom scri
 | error.iconCaptcha | Will fire when the user selected the incorrect icon. |
 
 ## Credits
-The icons used in this project are made by <a href="https://www.webalys.com" target="_blank" rel="nofollow">Webalys</a>.
+The icons used in this project are made by [Webalys](https://www.webalys.com).
 
 ## License
-This project is licensed under the <a href="https://github.com/fabianwennink/jQuery-Icon-Captcha-Plugin/blob/master/LICENSE">MIT</a> license.
+This project is licensed under the [MIT](https://github.com/fabianwennink/jQuery-Icon-Captcha-Plugin/blob/master/LICENSE) license.

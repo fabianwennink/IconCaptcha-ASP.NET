@@ -14,7 +14,7 @@ namespace IconCaptcha_ASP.NET.Controllers
 {
     public class CaptchaController : Controller
     {
-        private readonly IconCaptcha _captcha;
+        private readonly IconCaptcha _captcha; 
 
         private readonly string _contentFolder = "Content/icons";
 
@@ -52,7 +52,7 @@ namespace IconCaptcha_ASP.NET.Controllers
             HttpRequest request = System.Web.HttpContext.Current.Request;
             HttpResponse response = System.Web.HttpContext.Current.Response;
 
-            IconCaptchaResult result = ControllerExtension.CallIconCaptcha(_captcha, request, response);
+            IconCaptchaResult result = IconCaptchaExtension.CallIconCaptcha(_captcha, request, response);
 
             // Go through every result state. Custom code can be added here as well, if you like.
             switch (result.CaptchaState)
