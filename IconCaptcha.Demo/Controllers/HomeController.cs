@@ -5,13 +5,14 @@
     Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
 
+using IconCaptcha.Demo.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IconCaptcha.Demo.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IconCaptcha _captcha; 
+        private readonly IconCaptchaService _captcha; 
 
         private readonly string _contentFolder = "assets/icons";
 
@@ -20,7 +21,7 @@ namespace IconCaptcha.Demo.Controllers
             return View();
         }
 
-        public HomeController(IconCaptcha captcha)
+        public HomeController(IconCaptchaService captcha)
         {
             _captcha = captcha;
             // ISessionProvider sessionProvider = new HttpContextSession(HttpContext);
@@ -32,84 +33,51 @@ namespace IconCaptcha.Demo.Controllers
             // _captcha = new IconCaptcha(sessionProvider, pathToContent);
         }
 
-        [HttpGet]
-        [Route("regular-form")]
+        [HttpGet("regular-form")]
         public ActionResult RegularForm()
         {
-            return View();
+            return View(new SubmissionViewModel());
         }
 
-        [HttpGet]
-        [Route("ajax-form")]
+        [HttpPost("regular-form-submit")]
+        public ActionResult RegularFormSubmit()
+        {
+            var submissionViewModel = new SubmissionViewModel
+            {
+                Error = false,
+            };
+            
+            try
+            {
+                _captcha.ValidateSubmission();
+            }
+            catch (SubmissionException e)
+            {
+                submissionViewModel.Error = true;
+                submissionViewModel.ErrorMessage = e.Message;
+            }
+
+            return View("RegularForm", submissionViewModel);
+        }
+
+        [HttpGet("ajax-form")]
         public ActionResult AjaxForm()
         {
             return View();
         }
 
-        /// <summary>
-        /// Will be callled multiple times during the usage of the captcha. 
-        /// Only HTTP GET and POST should be allowed here.
-        /// 
-        /// Calls:
-        /// - Requesting the captcha data (hashes) from the servers.
-        /// - Requesting the icons from the server based on the captcha ID and hash.
-        /// - Validating the user's selected icon input.
-        /// </summary>
-        /// <returns>
-        /// A JSON string, or NULL. The reason for multiple return types is to not 
-        /// break compatibility with the JavaScript front-end script (since it has only 1 request endpoint).
-        /// </returns>
-        // [HttpGet]
-        // [HttpPost]
-        // public object GetCaptcha()
-        // {
-        //     HttpRequest request = HttpContext.Request;
-        //     HttpResponse response = HttpContext.Response;
-        //
-        //     IconCaptchaResult result = IconCaptchaExtension.CallIconCaptcha(_captcha, request, response);
-        //
-        //     // Go through every result state. Custom code can be added here as well, if you like.
-        //     switch (result.CaptchaState)
-        //     {
-        //         case IconCaptchaState.CaptchaHashesReturned:
-        //             return Json(result.CaptchaResult as string[]);
-        //         case IconCaptchaState.CaptchaImageReturned:
-        //             return File(result.CaptchaResult as FileStream, "image/png");
-        //         case IconCaptchaState.CaptchaIconSelected:
-        //         case IconCaptchaState.CaptchaGeneralFail:
-        //         default:
-        //             return null;
-        //     }
-        // }
-
-        /// <summary>
-        /// Will be called when the captcha is submitted to the server. It validated the captcha 
-        /// once more to make sure the captcha was really completed.
-        /// 
-        /// The implementation of the ValidateSubmission() method is just one example, there are other implementations possible.
-        /// In case the validation fails, an IconCaptchaException will be thrown. ValidateSubmission() also returns a boolean TRUE when it's validated.
-        /// </summary>
-        /// <returns>A new view.</returns>
-        [HttpPost]
-        public ActionResult SubmitForm()
+        [HttpPost("ajax-form-submit")]
+        public ActionResult<string> AjaxFormSubmit()
         {
-            HttpRequest request = HttpContext.Request;
-
             try
             {
-                // Validate the captcha.
-                _captcha.ValidateSubmission(request.Form);
+                _captcha.ValidateSubmission();
 
-                // Return the success view.
-                return View("Success");
+                return "It looks like you are a human";
             }
-            catch(SubmissionException ex)
+            catch (SubmissionException e)
             {
-                // You can use ex.Message to show the custom error message.
-                // Debug.WriteLine(ex.Message);
-
-                // Return the error view.
-                return View("Error");
+                return e.Message;
             }
         }
     }

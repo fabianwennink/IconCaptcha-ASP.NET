@@ -11,7 +11,7 @@ using SkiaSharp;
 
 namespace IconCaptcha
 {
-    public class IconCaptcha
+    public class IconCaptchaService
     {
         public const string SESSION_NAME = "iconcaptcha";
         public const string SESSION_SETTINGS = "settings";
@@ -49,11 +49,13 @@ namespace IconCaptcha
             ["legacy-dark"] = new(Mode.dark, new byte[] { 64, 64, 64 }),
         };
 
+        private CaptchaSession _session;
+
         public ISessionProvider SessionProvider { get; }
         public IHttpContextAccessor HttpContextAccessor { get; }
         public IOptions<Options> Options { get; }
 
-        public IconCaptcha(ISessionProvider sessionProvider, IHttpContextAccessor httpContextAccessor,
+        public IconCaptchaService(ISessionProvider sessionProvider, IHttpContextAccessor httpContextAccessor,
             IOptions<Options> options)
         {
             SessionProvider = sessionProvider;
@@ -64,7 +66,26 @@ namespace IconCaptcha
 
         public Random Rand { get; }
 
-        public CaptchaSession Session { get; set; }
+        public CaptchaSession Session
+        {
+            get
+            {
+                if (_session != null)
+                {
+                    return _session;
+                }
+
+                if (!SessionProvider.TryGetSession(SESSION_NAME, out var session) || session == null)
+                {
+                    session = new CaptchaSession();
+                }
+
+                _session = session;
+                SaveSession();
+
+                return _session;
+            }
+        }
 
         /// <summary>
         /// Generates and returns a secure random string which will serve as a CSRF token for the current session. After
@@ -76,8 +97,6 @@ namespace IconCaptcha
         /// <returns>The captcha token.</returns>
         public string Token()
         {
-            InitSession();
-            
             // Make sure to only generate a token if none exists.
             if (Session.Token == null)
             {
@@ -100,8 +119,6 @@ namespace IconCaptcha
         /// <param name="identifier">The identifier of the captcha.</param>
         private CaptchaSessionData CreateSession(int identifier = 0)
         {
-            InitSession();
-
             // Load the captcha session for the current identifier.
             if (!Session.TryGetValue(identifier, out var sessionData))
             {
@@ -111,17 +128,6 @@ namespace IconCaptcha
             }
 
             return sessionData;
-        }
-
-        private void InitSession()
-        {
-            if (!SessionProvider.TryGetSession(SESSION_NAME, out var session) || session == null)
-            {
-                session = new CaptchaSession();
-            }
-
-            Session = session;
-            SaveSession();
         }
 
         public CaptchaResult GetCaptchaData(Payload payload)
@@ -281,8 +287,10 @@ namespace IconCaptcha
      *
      * @return boolean TRUE if the captcha was correct, FALSE if not.
      */
-        public bool ValidateSubmission(IFormCollection post)
+        public void ValidateSubmission()
         {
+            var post = HttpContextAccessor.HttpContext.Request.Form;
+
             // Make sure the form data is set.
             if (!post.Any())
             {
@@ -290,8 +298,8 @@ namespace IconCaptcha
             }
 
             // Check if the captcha ID is set.
-            if (post.TryGetValue(CAPTCHA_FIELD_ID, out var captchaIdString)
-                || !int.TryParse(captchaIdString, out var captchaId)
+            if (!post.TryGetValue(CAPTCHA_FIELD_ID, out var captchaIdString)
+                || !int.TryParse(captchaIdString.First(), out var captchaId)
                 || !Session.ContainsKey(captchaId))
             {
                 throw new SubmissionException(4, Options.Value.Messages.InvalidId);
@@ -337,7 +345,8 @@ namespace IconCaptcha
                 {
                     // Invalidate the captcha to prevent resubmission of a form on the same captcha.
                     InvalidateSession(identifier);
-                    return true;
+                    
+                    return;
                 }
 
                 throw new SubmissionException(1, Options.Value.Messages.WrongIcon);
@@ -629,7 +638,7 @@ namespace IconCaptcha
 
         private void SaveSession()
         {
-            SessionProvider.SetSession(SESSION_NAME, Session);
+            SessionProvider.SetSession(SESSION_NAME, _session);
         }
 
         /// <summary>

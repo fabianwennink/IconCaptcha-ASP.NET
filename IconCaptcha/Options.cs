@@ -10,7 +10,7 @@ namespace IconCaptcha
     {
         public string IconPath { get; set; } // required
 
-        public IDictionary<string, Theme> Themes { get; set; } = IconCaptcha.CAPTCHA_DEFAULT_THEME_COLORS;
+        public IDictionary<string, Theme> Themes { get; set; } = IconCaptchaService.CAPTCHA_DEFAULT_THEME_COLORS;
 
         public MessageOptions Messages { get; set; } = new();
 

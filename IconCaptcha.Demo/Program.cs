@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IconCaptcha.IconCaptcha>();
+builder.Services.AddScoped<IconCaptcha.IconCaptchaService>();
 builder.Services.AddScoped<ISessionProvider, HttpContextSession>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();

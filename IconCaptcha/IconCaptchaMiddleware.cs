@@ -11,9 +11,9 @@ namespace IconCaptcha
     public class IconCaptchaMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IconCaptcha _captcha;
+        private readonly IconCaptchaService _captcha;
 
-        public IconCaptchaMiddleware(RequestDelegate next, IconCaptcha captcha)
+        public IconCaptchaMiddleware(RequestDelegate next, IconCaptchaService captcha)
         {
             _next = next;
             _captcha = captcha;
