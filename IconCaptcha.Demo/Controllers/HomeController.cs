@@ -14,8 +14,6 @@ namespace IconCaptcha.Demo.Controllers
     {
         private readonly IconCaptchaService _captcha; 
 
-        private readonly string _contentFolder = "assets/icons";
-
         public ActionResult Index()
         {
             return View();
@@ -24,13 +22,6 @@ namespace IconCaptcha.Demo.Controllers
         public HomeController(IconCaptchaService captcha)
         {
             _captcha = captcha;
-            // ISessionProvider sessionProvider = new HttpContextSession(HttpContext);
-
-            // // Combine the absolute root path with the folder in which the icons are stored.
-            // // Make sure this is correct, else the captcha breaks.
-            // string pathToContent = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _contentFolder);
-            //
-            // _captcha = new IconCaptcha(sessionProvider, pathToContent);
         }
 
         [HttpGet("regular-form")]

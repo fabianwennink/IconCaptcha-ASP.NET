@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+    Icon Captcha Plugin ASP.NET MVC: v3.1.2
+    Copyright © 2018, Fabian Wennink (https://www.fabianwennink.nl)
+    
+    Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+*/
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -53,10 +60,10 @@ namespace IconCaptcha
 
         public ISessionProvider SessionProvider { get; }
         public IHttpContextAccessor HttpContextAccessor { get; }
-        public IOptions<Options> Options { get; }
+        public IOptions<IconCaptchaOptions> Options { get; }
 
         public IconCaptchaService(ISessionProvider sessionProvider, IHttpContextAccessor httpContextAccessor,
-            IOptions<Options> options)
+            IOptions<IconCaptchaOptions> options)
         {
             SessionProvider = sessionProvider;
             HttpContextAccessor = httpContextAccessor;

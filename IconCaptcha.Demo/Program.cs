@@ -1,31 +1,45 @@
-using IconCaptcha;
+/*
+    Icon Captcha Plugin ASP.NET MVC: v3.1.2
+    Copyright © 2018, Fabian Wennink (https://www.fabianwennink.nl)
+    
+    Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+*/
 
-var builder = WebApplication.CreateBuilder(args);
+namespace IconCaptcha.Demo
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+            builder.Configuration
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json");
+            
+            builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IconCaptcha.IconCaptchaService>();
-builder.Services.AddScoped<ISessionProvider, HttpContextSession>();
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddSession();
+            // IconCaptcha : Required, parameter optional
+            builder.Services.AddIconCaptcha(builder.Configuration.GetSection("IconCaptcha"));
+            
+            // IconCaptcha : Optional 
+            builder.Services.Configure<IconCaptchaOptions>(options => options.IconPath = "assets/icons");
 
-builder.Services.Configure<Options>(options => options.IconPath = "assets/icons");
+            var app = builder.Build();
 
-var app = builder.Build();
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseSession();
 
-app.UseStaticFiles();
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.UseRouting();
+            // IconCaptcha : Required 
+            app.MapIconCaptcha();
 
-app.UseAuthorization();
-
-app.UseSession();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapIconCaptcha();
-
-app.Run();
+            app.Run();
+        }
+    }
+}

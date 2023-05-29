@@ -3,6 +3,11 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <LangVersion>9</LangVersion>
+
+    <Title>IconCaptcha</Title>
+    <Description>IconCaptcha is a faster and more user-friendly captcha than most other captchas. You no longer have to read any annoying text-images, an IconCaptcha captcha can be completed with 1 simple click!</Description>
+    <Product>IconCaptcha</Product>
+    <Copyright>Copyright © 2017, Fabian Wennink (https://www.fabianwennink.nl)</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,14 +16,6 @@
 
   <ItemGroup>
     <PackageReference Include="SkiaSharp" Version="2.88.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Old\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Old\**" />
   </ItemGroup>
 
 </Project>

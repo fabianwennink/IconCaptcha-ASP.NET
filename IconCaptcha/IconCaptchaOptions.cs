@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+    Icon Captcha Plugin ASP.NET MVC: v3.1.2
+    Copyright © 2018, Fabian Wennink (https://www.fabianwennink.nl)
+    
+    Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+*/
+
+using System;
 using System.Collections.Generic;
 
 namespace IconCaptcha
@@ -6,9 +13,9 @@ namespace IconCaptcha
     /// <summary>
     /// Default values for all the server-side options.
     /// </summary>
-    public class Options
+    public class IconCaptchaOptions
     {
-        public string IconPath { get; set; } // required
+        public string IconPath { get; set; }
 
         public IDictionary<string, Theme> Themes { get; set; } = IconCaptchaService.CAPTCHA_DEFAULT_THEME_COLORS;
 

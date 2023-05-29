@@ -5,10 +5,12 @@
     Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
 
-namespace IconCaptcha.Demo.ViewModels;
-
-public class SubmissionViewModel
+namespace IconCaptcha
 {
-    public bool? Error { get; set; }
-    public string ErrorMessage { get; set; }
+    public enum ActionType
+    {
+        RequestImageHashes = 1,
+        SetUserChoice = 2,
+        TimeExpired = 3,
+    }
 }

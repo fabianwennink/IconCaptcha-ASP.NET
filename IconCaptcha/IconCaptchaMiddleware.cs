@@ -1,6 +1,12 @@
-﻿using System;
+﻿/*
+    Icon Captcha Plugin ASP.NET MVC: v3.1.2
+    Copyright © 2018, Fabian Wennink (https://www.fabianwennink.nl)
+    
+    Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+*/
+
+using System;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -8,18 +14,16 @@ using Microsoft.Extensions.Primitives;
 
 namespace IconCaptcha
 {
-    public class IconCaptchaMiddleware
+    public class IconCaptchaMiddleware : IMiddleware
     {
-        private readonly RequestDelegate _next;
         private readonly IconCaptchaService _captcha;
 
-        public IconCaptchaMiddleware(RequestDelegate next, IconCaptchaService captcha)
+        public IconCaptchaMiddleware(IconCaptchaService captcha)
         {
-            _next = next;
             _captcha = captcha;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             var isAjaxRequest = IsAjaxRequest(context.Request);
             
@@ -75,7 +79,7 @@ namespace IconCaptcha
                 throw new SubmissionException(4, "OOOPS"); // TODO FIXME
             }
             
-            await _next(context);
+            await next(context);
         }
 
         /// <summary>
