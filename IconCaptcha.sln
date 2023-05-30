@@ -7,6 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IconCaptcha", "IconCaptcha\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IconCaptcha.Demo", "IconCaptcha.Demo\IconCaptcha.Demo.csproj", "{DF77FA7F-5D5C-43DB-AAB4-23A4ED0B9E69}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root items", "Root items", "{013A1C79-76E1-433A-B9CA-D6DE7C7FFC36}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		iconcaptcha-icon-50x50.png = iconcaptcha-icon-50x50.png
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

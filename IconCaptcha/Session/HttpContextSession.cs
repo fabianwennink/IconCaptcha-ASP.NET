@@ -1,8 +1,15 @@
-﻿using System.Text;
+﻿/*
+    Icon Captcha Plugin ASP.NET MVC: v3.1.2
+    Copyright © 2018, Fabian Wennink (https://www.fabianwennink.nl)
+    
+    Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+*/
+
+using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 
-namespace IconCaptcha
+namespace IconCaptcha.Session
 {
     /// <summary>
     /// Acts as a wrapper for the session handler. Put it somewhere in a class if 

@@ -9,6 +9,9 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using IconCaptcha.Dto;
+using IconCaptcha.Enums;
+using IconCaptcha.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
@@ -35,11 +38,6 @@ namespace IconCaptcha
                 // Decode the payload.
                 var payload = DecodePayload(payloadString, context.Request);
                 
-                // Validate the payload content. TODO
-                // if (!isset($payload, $payload['i']) || !is_numeric($payload['i'])) {
-                //     badRequest();
-                // }
-                
                 await _captcha.GetImage(payload.CaptchaId);
                 
                 return;
@@ -50,11 +48,6 @@ namespace IconCaptcha
             {
                 // Decode the payload.
                 var payload = DecodePayload(payloadString, context.Request);
-                
-                // Validate the payload content.
-                // if (!isset($payload, $payload['a'], $payload['i']) || !is_numeric($payload['a']) || !is_numeric($payload['i'])) {
-                //     badRequest();
-                // }
 
                 switch (payload.Action)
                 {
@@ -75,8 +68,6 @@ namespace IconCaptcha
                         _captcha.InvalidateSession(payload.CaptchaId);
                         return;
                 }
-                
-                throw new SubmissionException(4, "OOOPS"); // TODO FIXME
             }
             
             await next(context);
@@ -114,10 +105,9 @@ namespace IconCaptcha
         {
             var payload = JsonSerializer.Deserialize<Payload>(Util.Base64Decode(payloadString));
 
-            // TODO check values
             if (!IsValidToken(payload, false, contextRequest))
             {
-                throw new Exception("TODO");
+                throw new IconCaptchaException("Invalid token format.", 2);
             }
 
             return payload;

@@ -6,8 +6,9 @@
 */
 
 using System.Text.Json.Serialization;
+using IconCaptcha.Enums;
 
-namespace IconCaptcha
+namespace IconCaptcha.Dto
 {
     public class Payload
     {

@@ -9,8 +9,4 @@
       <ProjectReference Include="..\IconCaptcha\IconCaptcha.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="assets\**" CopyToOutputDirectory="PreserveNewest" />
-    </ItemGroup>
-
 </Project>

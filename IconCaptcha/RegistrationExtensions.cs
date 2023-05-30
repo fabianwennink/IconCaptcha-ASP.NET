@@ -5,6 +5,7 @@
     Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
 
+using IconCaptcha.Session;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

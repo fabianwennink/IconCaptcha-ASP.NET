@@ -7,13 +7,13 @@
 
 using System;
 
-namespace IconCaptcha
+namespace IconCaptcha.Exceptions
 {
-    public class SubmissionException : Exception
+    public class IconCaptchaException : Exception
     {
-        public int Code { get; set; }
-        
-        public SubmissionException(int code, string message) : base(message)
+        public int? Code { get; }
+
+        public IconCaptchaException(string message, int? code = null) : base(message)
         {
             Code = code;
         }

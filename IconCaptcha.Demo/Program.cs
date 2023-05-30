@@ -22,11 +22,13 @@ namespace IconCaptcha.Demo
             // IconCaptcha : Required, parameter optional
             builder.Services.AddIconCaptcha(builder.Configuration.GetSection("IconCaptcha"));
             
-            // IconCaptcha : Optional 
-            builder.Services.Configure<IconCaptchaOptions>(options => options.IconPath = "assets/icons");
+            // IconCaptcha : Optional, if you want to set configuration programmatically
+            builder.Services.Configure<IconCaptchaOptions>(options =>
+            {
+                // options.IconPath = "assets/icons";
+            });
 
             var app = builder.Build();
-
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();

@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 
-namespace IconCaptcha
+namespace IconCaptcha.Session
 {
     public class CaptchaSession
     {

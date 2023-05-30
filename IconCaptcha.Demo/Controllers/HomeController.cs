@@ -6,6 +6,7 @@
 */
 
 using IconCaptcha.Demo.ViewModels;
+using IconCaptcha.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IconCaptcha.Demo.Controllers

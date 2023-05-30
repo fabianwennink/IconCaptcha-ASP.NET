@@ -17,5 +17,10 @@
   <ItemGroup>
     <PackageReference Include="SkiaSharp" Version="2.88.3" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <!-- Embed default icons -->
+    <EmbeddedResource Include="Assets\**\*.png" LogicalName="%(RecursiveDir)%(Filename)%(Extension)"/>
+  </ItemGroup>
 
 </Project>

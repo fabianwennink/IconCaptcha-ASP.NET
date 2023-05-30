@@ -8,7 +8,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
-namespace IconCaptcha
+namespace IconCaptcha.Enums
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     [SuppressMessage("ReSharper", "InconsistentNaming")]

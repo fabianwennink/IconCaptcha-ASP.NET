@@ -5,17 +5,17 @@
     Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 */
 
-namespace IconCaptcha.Enums
-{
-    public class Theme
-    {
-        public Mode Icons { get; set; }
-        public byte[] Color { get; set; }
+using System;
 
-        public Theme(Mode icons, byte[] color)
+namespace IconCaptcha.Exceptions
+{
+    public class SubmissionException : Exception
+    {
+        public int Code { get; set; }
+        
+        public SubmissionException(int code, string message) : base(message)
         {
-            Icons = icons;
-            Color = color;
+            Code = code;
         }
     }
 }

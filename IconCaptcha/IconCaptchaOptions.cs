@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using IconCaptcha.Enums;
 
 namespace IconCaptcha
 {
@@ -17,7 +18,7 @@ namespace IconCaptcha
     {
         public string IconPath { get; set; }
 
-        public IDictionary<string, Theme> Themes { get; set; } = IconCaptchaService.CAPTCHA_DEFAULT_THEME_COLORS;
+        public IDictionary<string, Theme> Themes { get; set; } = IconCaptchaService.CaptchaDefaultThemeColors;
 
         public MessageOptions Messages { get; set; } = new();
 
