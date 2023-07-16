@@ -5,7 +5,15 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IconCaptcha", "IconCaptcha\IconCaptcha.csproj", "{2CE7EBFA-4F25-4298-BEF1-85ACB574647F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IconCaptcha_ASP.NET_Demo", "IconCaptcha_ASP.NET_Demo\IconCaptcha_ASP.NET_Demo.csproj", "{3D4F0055-2706-49CD-9D22-8E951D015D8C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IconCaptcha.Demo", "IconCaptcha.Demo\IconCaptcha.Demo.csproj", "{DF77FA7F-5D5C-43DB-AAB4-23A4ED0B9E69}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root items", "Root items", "{013A1C79-76E1-433A-B9CA-D6DE7C7FFC36}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		iconcaptcha-icon-50x50.png = iconcaptcha-icon-50x50.png
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +25,10 @@ Global
 		{2CE7EBFA-4F25-4298-BEF1-85ACB574647F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CE7EBFA-4F25-4298-BEF1-85ACB574647F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CE7EBFA-4F25-4298-BEF1-85ACB574647F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D4F0055-2706-49CD-9D22-8E951D015D8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D4F0055-2706-49CD-9D22-8E951D015D8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D4F0055-2706-49CD-9D22-8E951D015D8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D4F0055-2706-49CD-9D22-8E951D015D8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF77FA7F-5D5C-43DB-AAB4-23A4ED0B9E69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF77FA7F-5D5C-43DB-AAB4-23A4ED0B9E69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF77FA7F-5D5C-43DB-AAB4-23A4ED0B9E69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF77FA7F-5D5C-43DB-AAB4-23A4ED0B9E69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
