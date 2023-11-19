@@ -1,20 +1,13 @@
-﻿@* 
-  IconCaptcha Plugin: v3.1.2
-  Copyright © 2023, Fabian Wennink (https://www.fabianwennink.nl)
-  
-  Licensed under the MIT license: https://www.fabianwennink.nl/projects/IconCaptcha/license
-*@
-
-@model IconCaptcha.Demo.ViewModels.SubmissionViewModel
+﻿@model IconCaptcha.Demo.ViewModels.SubmissionViewModel
 @inject IconCaptcha.IconCaptchaService IconCaptcha
 
 <!DOCTYPE HTML>
 <html lang="en">
     <head>
-        <title>IconCaptcha v3.1.2 - By Fabian Wennink</title>
+        <title>@ViewBag.Title</title>
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=10" />
-        <meta name="author" content="Fabian Wennink © <?= date('Y') ?>" />
+        <meta name="author" content="Fabian Wennink © @DateTime.Now.Year" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 

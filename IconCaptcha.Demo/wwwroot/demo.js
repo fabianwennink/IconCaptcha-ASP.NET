@@ -1,11 +1,4 @@
-﻿/**
- * IconCaptcha Plugin: v3.1.2
- * Copyright © 2023, Fabian Wennink (https://www.fabianwennink.nl)
- *
- * Licensed under the MIT license: https://www.fabianwennink.nl/projects/IconCaptcha/license
- */
-
-// Theme selector.
+﻿// Theme selector.
 document.addEventListener('DOMContentLoaded', function() {
     const elements = document.querySelectorAll('.theme > span:first-child');
     for (let element of elements) {

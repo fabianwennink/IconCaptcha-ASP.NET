@@ -1,8 +1,8 @@
 /*
-    Icon Captcha Plugin ASP.NET MVC: v3.1.2
-    Copyright © 2018, Fabian Wennink (https://www.fabianwennink.nl)
-    
-    Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+    IconCaptcha - Copyright 2023, Fabian Wennink (https://www.fabianwennink.nl)
+    Licensed under the MIT license: https://www.fabianwennink.nl/projects/IconCaptcha-ASP.NET/license
+ 
+    The above copyright notice and license shall be included in all copies or substantial portions of the software.
 */
 
 namespace IconCaptcha.Dto
