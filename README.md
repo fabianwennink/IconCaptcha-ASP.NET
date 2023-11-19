@@ -5,34 +5,44 @@
 
 <br>![IconCaptcha Logo](http://i.imgur.com/RMUALSz.png)
 
-```diff
-!~ IconCaptcha for ASP.NET is no longer being maintained. ~!
-!~ The captcha can still be used, but will not receive any security updates in the future. ~!
-```
-
 IconCaptcha is a faster and more user-friendly captcha than most other captchas. You no longer have to read any annoying 
 text-images, with IconCaptcha you only have to compare two images and select the image which is only present once.
 
 Besides being user-friendly, IconCaptcha is also developer-friendly. With just a few steps you can get the captcha up and running. 
 Even developers new to ASP.NET can easily install IconCaptcha. The demo web application contains all the code needed to get the captcha working.
 
-![Preview Light](https://i.imgur.com/IO5XyPV.jpg) ![Preview Dark](https://i.imgur.com/tp7028J.jpg)
+![Preview](https://i.imgur.com/WsWdBRL.png)
+___
+### [View live demo](https://www.fabianwennink.nl/projects/IconCaptcha/)
+### [Download IconCaptcha for ASP.NET now](https://github.com/fabianwennink/IconCaptcha-ASP.NET/releases)
 ___
 
-### [Download IconCaptcha for ASP.NET now](https://github.com/fabianwennink/IconCaptcha-Plugin-ASP.NET/releases)
-### [View live demo](https://www.fabianwennink.nl/projects/IconCaptcha/v2/)
-___
-
-##### [Visit IconCaptcha for PHP here.](https://github.com/fabianwennink/IconCaptcha-Plugin-jQuery-PHP/releases)
+##### [Visit IconCaptcha for PHP here.](https://github.com/fabianwennink/IconCaptcha-PHP/releases)
 ___
 
 ## Features
 * __User Friendly:__ The captcha uses easily understandable images instead of hard to read texts to complete the captcha.
-* __Server-side validation:__ Any validation done by the captcha will be performed on the server-side instead of the client-side.
+* __Server-side Validation:__ All validation done by the captcha will be performed on the server-side instead of the client-side.
+* __Self Hosted:__ Because IconCaptcha is a self-hosted plugin, you are not relying on any third party.
+* __No Data Sharing:__ Unlike captchas such as Google ReCaptcha, no user data will be stored or sold to third parties.
+* __jQuery Support:__ IconCaptcha is written in plain JavaScript, but hooks into jQuery to allow you to integrate it in your jQuery code.
+* __Modern Design:__ The look and feel of IconCaptcha fits every modern website design.
 * __Events:__ Events are triggered at various points in the code, allowing you to hook into them and execute custom code if necessary.
-* __Themes:__ Select the design of the captcha without having to ever touch the stylesheet.
-* __SASS:__  The project contains a SASS file, allowing you to easily style and compile the stylesheet.
-* __Supports IE:__  The captcha _supports_ Internet Explorer 8 and up.
+* __Themes:__ Select the design of the captcha without having to ever touch a stylesheet, or create your own custom theme.
+* __SASS:__ The project contains a SASS file, allowing you to easily style and compile the stylesheet.
+* __IE 10+ Support:__ IconCaptcha has been tested in Internet Explorer 10 & 11 and is functional in both versions.
+
+## New in v3
+In version 3 of IconCaptcha, the whole plugin got an overhaul - both client-side and server-side. With better security features, more customizations/options, new
+themes, no more jQuery dependency and 250 icons, version 3 is the biggest change to IconCaptcha yet.
+
+* No longer required to use jQuery, although IconCaptcha can still be used with jQuery.
+* More captcha image generation options to increase the difficulty.
+* Automatic captcha invalidation after a period of no user interaction.
+* Automatic timeouts when too many incorrect selections were made by the user.
+* New light and dark themes with more modern designs, with improved support for custom themes.
+* Includes 250 new modern icons, created by [BlendIcons](https://blendicons.com/).
+* Better stability, general code improvements and bug fixes.
 
 ## Requirements
 * __.NET framework >= 4.0__
@@ -144,7 +154,7 @@ Events will be triggered at various point in the code. You can use a custom scri
 | error.iconCaptcha | Will fire when the user selected the incorrect icon. |
 
 ## Credits
-The icons used in this project are made by [Streamline](https://streamlinehq.com).
+The icons used in this project are made by [BlendIcons](https://blendicons.com/).
 
 ## License
-This project is licensed under the [MIT](https://github.com/fabianwennink/jQuery-Icon-Captcha-Plugin/blob/master/LICENSE) license.
+This project is licensed under the [MIT](https://www.fabianwennink.nl/projects/IconCaptcha-ASP.NET/license) license.
