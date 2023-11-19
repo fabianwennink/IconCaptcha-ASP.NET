@@ -9,13 +9,13 @@ namespace IconCaptcha.Demo
             builder.Configuration
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json");
-            
+
             builder.Services.AddControllersWithViews();
 
-            // IconCaptcha : Required, parameter optional
+            // IconCaptcha: Required, parameter optional
             builder.Services.AddIconCaptcha(builder.Configuration.GetSection("IconCaptcha"));
-            
-            // IconCaptcha : Optional, if you want to set configuration programmatically
+
+            // IconCaptcha: Optional, if you want to update the configuration programmatically.
             builder.Services.Configure<IconCaptchaOptions>(options =>
             {
                 // options.IconPath = "assets/icons";

@@ -1,6 +1,6 @@
 # IconCaptcha Plugin - ASP.NET
 
-[![Version](https://img.shields.io/badge/Version-1.0.0-orange.svg?style=flat-square)]() [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)]() [![Maintenance](https://img.shields.io/badge/Maintained-No-red.svg?style=flat-square)]()
+[![Version](https://img.shields.io/badge/Version-1.0.0-orange.svg?style=flat-square)]() [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)]()
 [![Donate](https://img.shields.io/badge/Donate-PayPal-yellow.svg?style=flat-square)](https://paypal.me/nlgamevideosnl)
 
 <br>![IconCaptcha Logo](http://i.imgur.com/RMUALSz.png)
@@ -49,8 +49,6 @@ themes, no more jQuery dependency and 250 icons, version 3 is the biggest change
 * __ASP.NET MVC >= 5.0__
 * __jQuery >= 1.12.3__
 
-_Note: Other .NET framework and ASP.NET versions may work, however the code was tested against the versions stated above._
-
 ## Installation
 
 ### __Install via NuGet:__
@@ -65,8 +63,8 @@ _Note: Other .NET framework and ASP.NET versions may work, however the code was 
 
 
 ### __Install manually:__
-1. Download [IconCaptcha for ASP.NET](https://github.com/fabianwennink/IconCaptcha-Plugin-ASP.NET/releases).
-2. Download the [IconCaptcha Front-End package](https://github.com/fabianwennink/IconCaptcha-Plugin-Front-End/releases/tag/2.5.0) (v2.5.0 is the last supported version).
+1. Download [IconCaptcha for ASP.NET](https://github.com/fabianwennink/IconCaptcha-ASP.NET/releases).
+2. Download the [IconCaptcha Front-End package](https://github.com/fabianwennink/IconCaptcha-Widget/releases).
 3. Unpack both repositories to somewhere on your computer.
 4. Drag the content of the ```dist/css/``` and ```dist/icons/``` folders of the IconCaptcha Front-End package into the ```Content/``` folder of your ASP.NET Web Application.
 5. Drag the content of the ```dist/js/``` folder of the IconCaptcha Front-End package into the ```Scipts/``` folder of your ASP.NET Web Application.
