@@ -17,26 +17,26 @@ namespace IconCaptcha.Session
         public string Token { get; set; }
 
         /// <summary>
-        /// The sessions by idenfier.
+        /// The sessions by identifier.
         /// </summary>
-        public Dictionary<int, CaptchaSessionData> Sessions { get; set; } = new();
+        public Dictionary<long, CaptchaSessionData> Sessions { get; set; } = new();
 
-        public void Add(int key, CaptchaSessionData value)
+        public void Add(long key, CaptchaSessionData value)
         {
             Sessions.Add(key, value);
         }
 
-        public bool ContainsKey(int key)
+        public bool ContainsKey(long key)
         {
             return Sessions.ContainsKey(key);
         }
 
-        public bool TryGetValue(int key, out CaptchaSessionData value)
+        public bool TryGetValue(long key, out CaptchaSessionData value)
         {
             return Sessions.TryGetValue(key, out value);
         }
 
-        public bool Remove(int key)
+        public bool Remove(long key)
         {
             return Sessions.Remove(key);
         }

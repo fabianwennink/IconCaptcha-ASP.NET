@@ -1,7 +1,7 @@
 ﻿/*
     IconCaptcha - Copyright 2023, Fabian Wennink (https://www.fabianwennink.nl)
     Licensed under the MIT license: https://www.fabianwennink.nl/projects/IconCaptcha-ASP.NET/license
- 
+
     The above copyright notice and license shall be included in all copies or substantial portions of the software.
 */
 
@@ -24,17 +24,15 @@ namespace IconCaptcha
 {
     public class IconCaptchaService
     {
-        public const string SessionName = "iconcaptcha";
-        public const string SessionSettings = "settings";
-        public const string SessionToken = "csrf";
-        public const string CaptchaFieldSelection = "ic-hf-se";
-        public const string CaptchaFieldId = "ic-hf-id";
-        public const string CaptchaFieldHoneypot = "ic-hf-hp";
-        public const string CaptchaFieldToken = "_iconcaptcha-token";
-        public const int CaptchaTokenLength = 20;
-        public const int CaptchaImageSize = 320;
+        private const string SessionName = "iconcaptcha";
+        private const string CaptchaFieldSelection = "ic-hf-se";
+        private const string CaptchaFieldId = "ic-hf-id";
+        private const string CaptchaFieldHoneypot = "ic-hf-hp";
+        private const string CaptchaFieldToken = "_iconcaptcha-token";
+        private const int CaptchaTokenLength = 20;
+        private const int CaptchaImageSize = 320;
 
-        public static readonly IDictionary<int, int> CaptchaIconSizes = new Dictionary<int, int>
+        private static readonly IDictionary<int, int> CaptchaIconSizes = new Dictionary<int, int>
         {
             [5] = 50,
             [6] = 40,
@@ -42,7 +40,7 @@ namespace IconCaptcha
             [8] = 20,
         };
 
-        public static readonly IDictionary<int, int> CaptchaMaxLowestIconCount = new Dictionary<int, int>
+        private static readonly IDictionary<int, int> CaptchaMaxLowestIconCount = new Dictionary<int, int>
         {
             [5] = 2,
             [6] = 2,
@@ -50,7 +48,7 @@ namespace IconCaptcha
             [8] = 3,
         };
 
-        public static readonly byte[] CaptchaDefaultBorderColor = { 240, 240, 240 };
+        private static readonly byte[] CaptchaDefaultBorderColor = { 240, 240, 240 };
 
         public static readonly IDictionary<string, Theme> CaptchaDefaultThemeColors = new Dictionary<string, Theme>
         {
@@ -60,11 +58,9 @@ namespace IconCaptcha
             ["legacy-dark"] = new(Mode.dark, new byte[] { 64, 64, 64 }),
         };
 
-        private CaptchaSession _session;
-
-        public ISessionProvider SessionProvider { get; }
-        public IHttpContextAccessor HttpContextAccessor { get; }
-        public IOptions<IconCaptchaOptions> Options { get; }
+        private ISessionProvider SessionProvider { get; }
+        private IHttpContextAccessor HttpContextAccessor { get; }
+        private IOptions<IconCaptchaOptions> Options { get; }
 
         public IconCaptchaService(ISessionProvider sessionProvider, IHttpContextAccessor httpContextAccessor,
             IOptions<IconCaptchaOptions> options)
@@ -74,10 +70,10 @@ namespace IconCaptcha
             Options = options;
             Rand = new Random();
         }
+        
+        private CaptchaSession _session;
 
-        public Random Rand { get; }
-
-        public CaptchaSession Session
+        private CaptchaSession Session
         {
             get
             {
@@ -97,6 +93,8 @@ namespace IconCaptcha
                 return _session;
             }
         }
+        
+        private Random Rand { get; }
 
         /// <summary>
         /// Generates and returns a secure random string which will serve as a CSRF token for the current session. After
@@ -124,24 +122,6 @@ namespace IconCaptcha
         }
 
         /// <summary>
-        /// Tries to load/initialize a {@see CaptchaSession} with the given captcha identifier.
-        /// When an existing session is found, it's data will be loaded, else a new session will be created.
-        /// </summary>
-        /// <param name="identifier">The identifier of the captcha.</param>
-        private CaptchaSessionData CreateSession(int identifier = 0)
-        {
-            // Load the captcha session for the current identifier.
-            if (!Session.TryGetValue(identifier, out var sessionData))
-            {
-                sessionData = new CaptchaSessionData();
-
-                Session.Add(identifier, sessionData);
-            }
-
-            return sessionData;
-        }
-
-        /// <summary>
         /// Initializes the state of a captcha. The amount of icons shown in the captcha image, their positions,
         /// which icon is correct and which icon identifiers should be used will all be determined in this function.
         /// This information will be stored in the {@see CaptchaSession}. The details required to initialize the client
@@ -150,7 +130,7 @@ namespace IconCaptcha
         /// In case a timeout is detected, no state will be initialized and an error message
         /// will be returned, also as a base64 encoded JSON string.
         /// </summary>
-        /// <param name="payload">The payload wontaining the theme and the identifier of the captcha.</param>
+        /// <param name="payload">The payload containing the theme and the identifier of the captcha.</param>
         /// <returns>Captcha details required to initialize the client.</returns>
         public CaptchaResult GetCaptchaData(Payload payload)
         {
@@ -192,8 +172,7 @@ namespace IconCaptcha
             var iconPositions = new int[iconAmount];
             var iconIds = new List<int>();
             var correctIconId = -1;
-
-
+            
             // Create a random 'icon position' order.
             var tempPositions = Enumerable.Range(0, iconAmount)
                 .OrderBy(c => Rand.Next())
@@ -233,7 +212,6 @@ namespace IconCaptcha
                 }
             }
 
-
             // Get the last attempts count to restore, after clearing the session.
             var attemptsCount = sessionData.Attempts;
 
@@ -256,8 +234,7 @@ namespace IconCaptcha
                 Id = payload.CaptchaId
             };
         }
-
-
+        
         /// <summary>
         /// Calculates the amount of times 1 or more other icons can be present in the captcha image besides the correct icon.
         /// Each other icons should be at least present 1 time more than the correct icon. When calculating the icon
@@ -317,7 +294,7 @@ namespace IconCaptcha
 
             // Check if the captcha ID is set.
             if (!post.TryGetValue(CaptchaFieldId, out var captchaIdString)
-                || !int.TryParse(captchaIdString.First(), out var captchaId)
+                || !long.TryParse(captchaIdString.First(), out var captchaId)
                 || !Session.ContainsKey(captchaId))
             {
                 throw new SubmissionException(4, Options.Value.Messages.InvalidId);
@@ -334,12 +311,9 @@ namespace IconCaptcha
             {
                 throw new SubmissionException(6, Options.Value.Messages.FormToken);
             }
-
-            // Get the captcha identifier.
-            var identifier = captchaId;
-
+            
             // Initialize the session.
-            var sessionData = CreateSession(identifier);
+            var sessionData = CreateSession(captchaId);
 
             // Check if the selection field is set.
             if (post.TryGetValue(CaptchaFieldSelection, out var selectionString))
@@ -362,8 +336,8 @@ namespace IconCaptcha
                     (clickedPosition != null && sessionData.Icons[clickedPosition.Value] == sessionData.CorrectId))
                 {
                     // Invalidate the captcha to prevent resubmission of a form on the same captcha.
-                    InvalidateSession(identifier);
-                    
+                    InvalidateSession(captchaId);
+
                     return;
                 }
 
@@ -409,16 +383,19 @@ namespace IconCaptcha
             var options = Options.Value;
 
             // Only validate if the token option is enabled.
-            if (options.Token) {
+            if (options.Token)
+            {
                 var sessionToken = GetToken();
 
                 // If the token is empty but the option is enabled, the token was never requested.
-                if (string.IsNullOrEmpty(sessionToken)) {
+                if (string.IsNullOrEmpty(sessionToken))
+                {
                     return false;
                 }
 
                 // Validate the payload and header token (if set) against the session token.
-                if (headerToken != null) {
+                if (headerToken != null)
+                {
                     return sessionToken == payloadToken && sessionToken == headerToken;
                 }
 
@@ -495,15 +472,15 @@ namespace IconCaptcha
         /// The image will only be rendered once as a PNG, and be destroyed right after rendering.
         /// </summary>
         /// <param name="identifier">The identifier of the captcha.</param>
-        public async Task GetImage(int identifier)
+        public async Task GetImage(long identifier)
         {
-            var httpContext = GetHttpContext();
-            
             // Check if the captcha id is set
             if (identifier <= -1)
             {
                 return;
             }
+
+            var httpContext = GetHttpContext();
 
             // Initialize the session.
             var sessionData = CreateSession(identifier);
@@ -546,11 +523,11 @@ namespace IconCaptcha
             var iconPath = Path.Combine(iconsDirectoryPath, themeIconColor.ToString());
 
             // Generate the captcha image.
-            await using var plateholderStream = isEmbedded
+            await using var placeholderStream = isEmbedded
                 ? GetType().Assembly.GetManifestResourceStream(placeholder)
                 : File.OpenRead(placeholder);
 
-            var generatedImage = GenerateImage(sessionData, iconPath, plateholderStream, isEmbedded);
+            var generatedImage = GenerateImage(sessionData, iconPath, placeholderStream, isEmbedded);
 
             // Set the content type header to the PNG MIME-type.
             httpContext.Response.ContentType = "image/png";
@@ -568,11 +545,6 @@ namespace IconCaptcha
             await generatedImage.CopyToAsync(httpContext.Response.Body);
         }
 
-        private HttpContext GetHttpContext()
-        {
-            return HttpContextAccessor.HttpContext ?? throw new IconCaptchaException("No HTTP context could be accessed.");
-        }
-
         /// <summary>
         /// Returns a generated image containing the icons for the current captcha instance. The icons will be copied
         /// onto a placeholder image, located at the $placeholderPath. The icons will be randomly rotated and flipped
@@ -583,7 +555,7 @@ namespace IconCaptcha
         /// <param name="placeholderStream">The stream to the placeholder image, with the name of the file included.</param>
         /// <param name="embeddedFiles">TRUE when reading files from assembly.</param>
         /// <returns>The generated image.</returns>
-        private Stream GenerateImage(CaptchaSessionData sessionData, 
+        private Stream GenerateImage(CaptchaSessionData sessionData,
             string iconPath,
             Stream placeholderStream,
             bool embeddedFiles = false
@@ -597,15 +569,15 @@ namespace IconCaptcha
             var iconImages = sessionData
                 .IconIds
                 .ToDictionary(
-                    id => id, 
+                    id => id,
                     id =>
                     {
                         var icon = Path.Combine(iconPath, $"icon-{id}.png");
-                        
+
                         using var stream = embeddedFiles
                             ? GetType().Assembly.GetManifestResourceStream(icon)
                             : File.OpenRead(icon);
-                        
+
                         return CreateImage(stream);
                     });
 
@@ -664,7 +636,7 @@ namespace IconCaptcha
                         surface.RotateDegrees(degree * 90);
                         surface.Translate(-rotated.Width / 2, -rotated.Height / 2);
                         surface.DrawBitmap(icon, 0, 0);
-                
+
                         icon = rotated;
                     }
                 }
@@ -676,10 +648,10 @@ namespace IconCaptcha
                     var surface = new SKCanvas(flipped);
                     surface.Scale(-1, 1, icon.Width / 2.0f, 0);
                     surface.DrawBitmap(icon, 0, 0);
-                
+
                     icon = flipped;
                 }
-                
+
                 // Flip icon vertically, if enabled.
                 if (flipVertically && Rand.Next(1, 2) == 1)
                 {
@@ -687,7 +659,7 @@ namespace IconCaptcha
                     var surface = new SKCanvas(flipped);
                     surface.Scale(1, -1, 0, icon.Height / 2.0f);
                     surface.DrawBitmap(icon, 0, 0);
-                
+
                     icon = flipped;
                 }
 
@@ -718,13 +690,8 @@ namespace IconCaptcha
         private static SKBitmap CreateImage(Stream file)
         {
             var image = SKImage.FromEncodedData(file);
-            
-            return SKBitmap.FromImage(image);
-        }
 
-        private void SaveSession()
-        {
-            SessionProvider.SetSession(SessionName, _session);
+            return SKBitmap.FromImage(image);
         }
 
         /// <summary>
@@ -732,12 +699,35 @@ namespace IconCaptcha
         /// The data stored inside the session will be destroyed, as the session will be unset.
         /// </summary>
         /// <param name="identifier">The identifier of the captcha.</param>
-        public void InvalidateSession(int identifier)
+        public void InvalidateSession(long identifier)
         {
             // Unset the previous session data
             Session?.Remove(identifier);
 
             SaveSession();
+        }
+
+        /// <summary>
+        /// Tries to load/initialize a {@see CaptchaSession} with the given captcha identifier.
+        /// When an existing session is found, it's data will be loaded, else a new session will be created.
+        /// </summary>
+        /// <param name="identifier">The identifier of the captcha.</param>
+        private CaptchaSessionData CreateSession(long identifier = 0)
+        {
+            // Load the captcha session for the current identifier.
+            if (!Session.TryGetValue(identifier, out var sessionData))
+            {
+                sessionData = new CaptchaSessionData();
+
+                Session.Add(identifier, sessionData);
+            }
+            
+            return sessionData;
+        }
+
+        private void SaveSession()
+        {
+            SessionProvider.SetSession(SessionName, _session);
         }
 
         /// <summary>
@@ -747,6 +737,12 @@ namespace IconCaptcha
         private string GetToken()
         {
             return Session.Token;
+        }
+
+        private HttpContext GetHttpContext()
+        {
+            return HttpContextAccessor.HttpContext ??
+                   throw new IconCaptchaException("No HTTP context could be accessed.");
         }
     }
 }

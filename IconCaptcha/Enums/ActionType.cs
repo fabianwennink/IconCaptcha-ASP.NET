@@ -9,8 +9,19 @@ namespace IconCaptcha.Enums
 {
     public enum ActionType
     {
+        /// <summary>
+        /// Indicates that challenge image hashes were requested.
+        /// </summary>
         RequestImageHashes = 1,
+
+        /// <summary>
+        /// Indicates that the user made an icon selection.
+        /// </summary>
         SetUserChoice = 2,
-        TimeExpired = 3,
+
+        /// <summary>
+        /// Indicates that the challenge has expired.
+        /// </summary>
+        TimeExpired = 3
     }
 }

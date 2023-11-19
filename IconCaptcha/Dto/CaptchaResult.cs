@@ -9,8 +9,8 @@ namespace IconCaptcha.Dto
 {
     public class CaptchaResult
     {
-        public int Id { get; set; }
-        public int Error { get; set; }
-        public double Data { get; set; }
+        public long Id { get; set; }
+        public int ?Error { get; set; }
+        public double ?Data { get; set; }
     }
 }

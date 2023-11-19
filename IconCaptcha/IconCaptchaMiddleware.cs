@@ -8,6 +8,7 @@
 using System;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using IconCaptcha.Dto;
 using IconCaptcha.Enums;
@@ -21,9 +22,16 @@ namespace IconCaptcha
     {
         private readonly IconCaptchaService _captcha;
 
+        private readonly JsonSerializerOptions _serializeOptions;
+        
         public IconCaptchaMiddleware(IconCaptchaService captcha)
         {
             _captcha = captcha;
+            _serializeOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -37,7 +45,7 @@ namespace IconCaptcha
             {
                 // Decode the payload.
                 var payload = DecodePayload(payloadString, context.Request);
-                
+
                 await _captcha.GetImage(payload.CaptchaId);
                 
                 return;
@@ -51,20 +59,18 @@ namespace IconCaptcha
 
                 switch (payload.Action)
                 {
-                    case ActionType.RequestImageHashes: // Requesting the image hashes
-                        // Echo the captcha data.
-                        var jsonData = JsonSerializer.Serialize(_captcha.GetCaptchaData(payload));
-                        
-                        await context.Response.WriteAsync(Util.Base64Encode(jsonData));
+                    case ActionType.RequestImageHashes:
+                        var jsonData = JsonSerializer.Serialize(_captcha.GetCaptchaData(payload), _serializeOptions);
+                        await context.Response.WriteAsync(Utils.Base64Encode(jsonData));
                         return;
                     
-                    case ActionType.SetUserChoice: // Setting the user's choice
+                    case ActionType.SetUserChoice:
                         if (_captcha.SetSelectedAnswer(payload)) {
                             return;
                         }
                         break;
                     
-                    case ActionType.TimeExpired: // Captcha interaction time expired.
+                    case ActionType.TimeExpired:
                         _captcha.InvalidateSession(payload.CaptchaId);
                         return;
                 }
@@ -103,7 +109,7 @@ namespace IconCaptcha
         /// </summary>
         private Payload DecodePayload(string payloadString, HttpRequest contextRequest)
         {
-            var payload = JsonSerializer.Deserialize<Payload>(Util.Base64Decode(payloadString));
+            var payload = JsonSerializer.Deserialize<Payload>(Utils.Base64Decode(payloadString));
 
             if (!IsValidToken(payload, false, contextRequest))
             {

@@ -13,7 +13,7 @@ namespace IconCaptcha.Dto
     public class Payload
     {
         [JsonPropertyName("i")]
-        public int CaptchaId { get; set; }
+        public long CaptchaId { get; set; }
 
         [JsonPropertyName("x")]
         public int? XPos { get; set; }
