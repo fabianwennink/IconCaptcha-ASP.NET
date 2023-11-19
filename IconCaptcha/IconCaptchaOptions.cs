@@ -40,7 +40,7 @@ namespace IconCaptcha
 
     public class ImageOptions
     {
-        public int AvailableIcons { get; set; } = 180;
+        public int AvailableIcons { get; set; } = 250;
         public ImageAmountOptions Amount { get; set; } = new();
         public bool Rotate { get; set; } = true;
         public ImageFlipOptions Flip { get; set; } = new();
