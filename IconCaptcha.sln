@@ -10,7 +10,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root items", "Root items", "{013A1C79-76E1-433A-B9CA-D6DE7C7FFC36}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		iconcaptcha-icon-50x50.png = iconcaptcha-icon-50x50.png
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection

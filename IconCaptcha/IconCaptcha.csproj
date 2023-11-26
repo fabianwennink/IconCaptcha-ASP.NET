@@ -5,9 +5,20 @@
     <LangVersion>9</LangVersion>
 
     <Title>IconCaptcha</Title>
-    <Description>IconCaptcha is a faster and more user-friendly captcha than most other captchas. You no longer have to read any annoying text-images, an IconCaptcha captcha can be completed with 1 simple click!</Description>
+    <Description>IconCaptcha is a self-hosted, customizable, easy-to-implement and user-friendly captcha.</Description>
+    <Summary>IconCaptcha is a self-hosted, customizable, easy-to-implement and user-friendly captcha.</Summary>
     <Product>IconCaptcha</Product>
-    <Copyright>Copyright © 2017, Fabian Wennink (https://www.fabianwennink.nl)</Copyright>
+    <Authors>Fabian Wennink</Authors>
+    <Copyright>Copyright © 2023 Fabian Wennink</Copyright>
+    <Version>3.0.0</Version>
+    <PackageProjectUrl>https://www.fabianwennink.nl/projects/IconCaptcha</PackageProjectUrl>
+    <PackageLicenseUrl>https://www.fabianwennink.nl/projects/IconCaptcha-ASP.NET/license</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/fabianwennink/IconCaptcha-ASP.NET</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageTags>captcha;anti-bot</PackageTags>
+    <RootNamespace>IconCaptcha</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +32,12 @@
   <ItemGroup>
     <!-- Embed default icons -->
     <EmbeddedResource Include="Assets\**\*.png" LogicalName="%(RecursiveDir)%(Filename)%(Extension)"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="icon.png" Pack="true" PackagePath="\" />
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
