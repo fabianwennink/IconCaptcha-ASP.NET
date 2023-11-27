@@ -18,12 +18,18 @@ namespace IconCaptcha.Demo.Controllers
             _captcha = captcha;
         }
 
+        /// <summary>
+        /// Handles the HTTP GET request for the regular, non-AJAX form page.
+        /// </summary>
         [HttpGet("regular-form")]
         public ActionResult RegularForm()
         {
             return View(new SubmissionViewModel());
         }
 
+        /// <summary>
+        /// Handles the HTTP POST request for submitting a regular, non-AJAX form.
+        /// </summary>
         [HttpPost("regular-form-submit")]
         public ActionResult RegularFormSubmit()
         {
@@ -36,7 +42,7 @@ namespace IconCaptcha.Demo.Controllers
             {
                 _captcha.ValidateSubmission();
             }
-            catch (SubmissionException e)
+            catch (IconCaptchaSubmissionException e)
             {
                 submissionViewModel.Error = true;
                 submissionViewModel.ErrorMessage = e.Message;
@@ -45,12 +51,19 @@ namespace IconCaptcha.Demo.Controllers
             return View("RegularForm", submissionViewModel);
         }
 
+        /// <summary>
+        /// Handles the HTTP GET request for the AJAX form page.
+        /// </summary>
         [HttpGet("ajax-form")]
         public ActionResult AjaxForm()
         {
             return View();
         }
 
+        /// <summary>
+        /// Handles the HTTP POST request for submitting the AJAX form.
+        /// The AJAX form simply expects either a success or error message to be returned.
+        /// </summary>
         [HttpPost("ajax-form-submit")]
         public ActionResult<string> AjaxFormSubmit()
         {
@@ -60,7 +73,7 @@ namespace IconCaptcha.Demo.Controllers
 
                 return "It looks like you are a human";
             }
-            catch (SubmissionException e)
+            catch (IconCaptchaSubmissionException e)
             {
                 return e.Message;
             }

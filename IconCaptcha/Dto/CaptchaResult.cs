@@ -9,8 +9,19 @@ namespace IconCaptcha.Dto
 {
     public class CaptchaResult
     {
+        /// <summary>
+        /// The identifier of the widget.
+        /// </summary>
         public long Id { get; set; }
+        
+        /// <summary>
+        /// An error code, in case the response should trigger a widget error.
+        /// </summary>
         public int ?Error { get; set; }
-        public double ?Data { get; set; }
+        
+        /// <summary>
+        /// Any additional data to include in the response.
+        /// </summary>
+        public object ?Data { get; set; }
     }
 }

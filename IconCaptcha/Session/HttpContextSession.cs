@@ -11,10 +11,6 @@ using Microsoft.AspNetCore.Http;
 
 namespace IconCaptcha.Session
 {
-    /// <summary>
-    /// Acts as a wrapper for the session handler. Put it somewhere in a class if 
-    /// you want to use the captcha in multiple controllers.
-    /// </summary>
     public class HttpContextSession : ISessionProvider
     {
         private IHttpContextAccessor HttpContextAccessor { get; }
@@ -24,6 +20,7 @@ namespace IconCaptcha.Session
             HttpContextAccessor = httpContextAccessor;
         }
 
+        /// <inheritdoc cref="ISessionProvider.TryGetSession"/>
         public bool TryGetSession(string key, out CaptchaSession session)
         {
             if (!HttpContextAccessor.HttpContext.Session.TryGetValue(key, out var value))
@@ -39,6 +36,7 @@ namespace IconCaptcha.Session
             return true;
         }
 
+        /// <inheritdoc cref="ISessionProvider.SetSession"/>
         public void SetSession(string key, CaptchaSession value)
         {
             HttpContextAccessor.HttpContext.Session.SetString(key, JsonSerializer.Serialize(value));

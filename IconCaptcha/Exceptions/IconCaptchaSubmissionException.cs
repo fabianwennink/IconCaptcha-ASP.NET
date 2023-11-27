@@ -9,11 +9,11 @@ using System;
 
 namespace IconCaptcha.Exceptions
 {
-    public class SubmissionException : Exception
+    public class IconCaptchaSubmissionException : Exception
     {
         public int Code { get; set; }
         
-        public SubmissionException(int code, string message) : base(message)
+        public IconCaptchaSubmissionException(int code, string message) : base(message)
         {
             Code = code;
         }

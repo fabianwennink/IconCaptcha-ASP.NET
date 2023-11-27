@@ -31,7 +31,7 @@ namespace IconCaptcha.Demo
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            // IconCaptcha : Required 
+            // IconCaptcha: Required 
             app.MapIconCaptcha();
 
             app.Run();

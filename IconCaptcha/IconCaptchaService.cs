@@ -29,9 +29,21 @@ namespace IconCaptcha
         private const string CaptchaFieldId = "ic-hf-id";
         private const string CaptchaFieldHoneypot = "ic-hf-hp";
         private const string CaptchaFieldToken = "_iconcaptcha-token";
+        
+        /// <summary>
+        /// The default length of a captcha token.
+        /// </summary>
         private const int CaptchaTokenLength = 20;
+        
+        /// <summary>
+        /// The default image size captcha challenge in pixels.
+        /// </summary>
         private const int CaptchaImageSize = 320;
 
+        /// <summary>
+        /// The size in pixels of each icon on the challenge image based on the amount of icons per challenge.
+        /// For each entry, the key indicates the icons per challenge, and the value the width of each icon.
+        /// </summary>
         private static readonly IDictionary<int, int> CaptchaIconSizes = new Dictionary<int, int>
         {
             [5] = 50,
@@ -40,6 +52,11 @@ namespace IconCaptcha
             [8] = 20,
         };
 
+        /// <summary>
+        /// The lowest amount of different icon possibilities per amount of icons per challenge.
+        /// For each entry, the key indicates of icons per challenge, and the value the
+        /// amount of different possible icons can be used while generating a challenge.
+        /// </summary>
         private static readonly IDictionary<int, int> CaptchaMaxLowestIconCount = new Dictionary<int, int>
         {
             [5] = 2,
@@ -48,8 +65,15 @@ namespace IconCaptcha
             [8] = 3,
         };
 
+        /// <summary>
+        /// The default challenge border color as RGB.
+        /// </summary>
         private static readonly byte[] CaptchaDefaultBorderColor = { 240, 240, 240 };
 
+        /// <summary>
+        /// The list of default themes. For each entry, the key indicates the name of the theme, and the value
+        /// contains a new <see cref="Theme"/> containing the icon and icon separator colors.
+        /// </summary>
         public static readonly IDictionary<string, Theme> CaptchaDefaultThemeColors = new Dictionary<string, Theme>
         {
             ["light"] = new(Mode.light, CaptchaDefaultBorderColor),
@@ -57,6 +81,8 @@ namespace IconCaptcha
             ["dark"] = new(Mode.dark, new byte[] { 64, 64, 64 }),
             ["legacy-dark"] = new(Mode.dark, new byte[] { 64, 64, 64 }),
         };
+        
+        private Random Rand { get; }
 
         private ISessionProvider SessionProvider { get; }
         private IHttpContextAccessor HttpContextAccessor { get; }
@@ -94,8 +120,6 @@ namespace IconCaptcha
             }
         }
         
-        private Random Rand { get; }
-
         /// <summary>
         /// Generates and returns a secure random string which will serve as a CSRF token for the current session. After
         /// generating the token, it will be saved in the global session variable. The length of the token will be
@@ -281,7 +305,7 @@ namespace IconCaptcha
         /// Validates the user form submission. If the captcha is incorrect, it
         /// will set the global error variable and return FALSE, else TRUE.
         /// </summary>
-        /// <exception cref="SubmissionException">Throws when the validation fails.</exception>
+        /// <exception cref="IconCaptchaSubmissionException">Throws when the validation fails.</exception>
         public void ValidateSubmission()
         {
             var post = GetHttpContext().Request.Form;
@@ -289,7 +313,7 @@ namespace IconCaptcha
             // Make sure the form data is set.
             if (!post.Any())
             {
-                throw new SubmissionException(3, Options.Value.Messages.EmptyForm);
+                throw new IconCaptchaSubmissionException(3, Options.Value.Messages.EmptyForm);
             }
 
             // Check if the captcha ID is set.
@@ -297,19 +321,19 @@ namespace IconCaptcha
                 || !long.TryParse(captchaIdString.First(), out var captchaId)
                 || !Session.ContainsKey(captchaId))
             {
-                throw new SubmissionException(4, Options.Value.Messages.InvalidId);
+                throw new IconCaptchaSubmissionException(4, Options.Value.Messages.InvalidId);
             }
 
             // Check if the honeypot value is set.
             if (!post.TryGetValue(CaptchaFieldHoneypot, out var honeyPot) || !string.IsNullOrEmpty(honeyPot))
             {
-                throw new SubmissionException(5, Options.Value.Messages.InvalidId);
+                throw new IconCaptchaSubmissionException(5, Options.Value.Messages.InvalidId);
             }
 
             // Verify if the captcha token is correct.
             if (!post.TryGetValue(CaptchaFieldToken, out var token) || !ValidateToken(token))
             {
-                throw new SubmissionException(6, Options.Value.Messages.FormToken);
+                throw new IconCaptchaSubmissionException(6, Options.Value.Messages.FormToken);
             }
             
             // Initialize the session.
@@ -341,10 +365,10 @@ namespace IconCaptcha
                     return;
                 }
 
-                throw new SubmissionException(1, Options.Value.Messages.WrongIcon);
+                throw new IconCaptchaSubmissionException(1, Options.Value.Messages.WrongIcon);
             }
 
-            throw new SubmissionException(2, Options.Value.Messages.NoSelection);
+            throw new IconCaptchaSubmissionException(2, Options.Value.Messages.NoSelection);
         }
 
         /// <summary>
@@ -550,12 +574,12 @@ namespace IconCaptcha
         /// onto a placeholder image, located at the $placeholderPath. The icons will be randomly rotated and flipped
         /// based on the captcha options.
         /// </summary>
-        /// <param name="sessionData">The current session.</param>
+        /// <param name="challenge">The current session.</param>
         /// <param name="iconPath">The path to the folder holding the icons.</param>
         /// <param name="placeholderStream">The stream to the placeholder image, with the name of the file included.</param>
         /// <param name="embeddedFiles">TRUE when reading files from assembly.</param>
         /// <returns>The generated image.</returns>
-        private Stream GenerateImage(CaptchaSessionData sessionData,
+        private Stream GenerateImage(CaptchaChallenge challenge,
             string iconPath,
             Stream placeholderStream,
             bool embeddedFiles = false
@@ -566,7 +590,7 @@ namespace IconCaptcha
             var canvas = new SKCanvas(placeholder);
 
             // Prepare the icon images.
-            var iconImages = sessionData
+            var iconImages = challenge
                 .IconIds
                 .ToDictionary(
                     id => id,
@@ -582,7 +606,7 @@ namespace IconCaptcha
                     });
 
             // Image pixel information.
-            var iconCount = sessionData.Icons.Count;
+            var iconCount = challenge.Icons.Count;
             var iconSize = CaptchaIconSizes[iconCount];
             var iconOffset = (CaptchaImageSize / iconCount - 30) / 2;
             var iconOffsetAdd = CaptchaImageSize / iconCount - iconSize;
@@ -601,7 +625,7 @@ namespace IconCaptcha
             {
                 // Determine border color.
                 byte[] color;
-                if (Options.Value.Themes.TryGetValue(sessionData.Mode, out var mode) && mode.Color.Length == 3)
+                if (Options.Value.Themes.TryGetValue(challenge.Mode, out var mode) && mode.Color.Length == 3)
                 {
                     color = mode.Color;
                 }
@@ -618,7 +642,7 @@ namespace IconCaptcha
             for (var i = 0; i < iconCount; i++)
             {
                 // Get the icon image from the array. Use position to get the icon ID.
-                var icon = iconImages[sessionData.Icons[i]];
+                var icon = iconImages[challenge.Icons[i]];
 
                 // Rotate icon, if enabled.
                 if (rotateEnabled)
@@ -712,12 +736,12 @@ namespace IconCaptcha
         /// When an existing session is found, it's data will be loaded, else a new session will be created.
         /// </summary>
         /// <param name="identifier">The identifier of the captcha.</param>
-        private CaptchaSessionData CreateSession(long identifier = 0)
+        private CaptchaChallenge CreateSession(long identifier = 0)
         {
             // Load the captcha session for the current identifier.
             if (!Session.TryGetValue(identifier, out var sessionData))
             {
-                sessionData = new CaptchaSessionData();
+                sessionData = new CaptchaChallenge();
 
                 Session.Add(identifier, sessionData);
             }

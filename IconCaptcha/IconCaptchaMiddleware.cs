@@ -37,11 +37,9 @@ namespace IconCaptcha
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             var isAjaxRequest = IsAjaxRequest(context.Request);
-            
-            StringValues payloadString;
-            
+
             // HTTP GET
-            if (HttpMethods.IsGet(context.Request.Method) && !isAjaxRequest && context.Request.Query.TryGetValue("payload", out payloadString))
+            if (HttpMethods.IsGet(context.Request.Method) && !isAjaxRequest && context.Request.Query.TryGetValue("payload", out var payloadString))
             {
                 // Decode the payload.
                 var payload = DecodePayload(payloadString, context.Request);
@@ -80,7 +78,7 @@ namespace IconCaptcha
         }
 
         /// <summary>
-        /// Adds another level of security to the Ajax call. Only requests made through Ajax are allowed.
+        /// Checks if the current HTTP request was an Ajax request.
         /// </summary>
         private bool IsAjaxRequest(HttpRequest contextRequest)
         {
@@ -90,6 +88,8 @@ namespace IconCaptcha
 
         /// <summary>
         /// Validates the payload and possibly the header tokens.
+        /// <param name="payload">The request payload to validate.</param>
+        /// <param name="checkHeader">Whether the header token should also be checked.</param>
         /// </summary>
         private bool IsValidToken(Payload payload, bool checkHeader, HttpRequest contextRequest)
         {
@@ -106,6 +106,7 @@ namespace IconCaptcha
 
         /// <summary>
         /// Tries to decode the given base64 and json encoded payload.
+        /// <param name="payloadString">The encoded payload string to decode.</param>
         /// </summary>
         private Payload DecodePayload(string payloadString, HttpRequest contextRequest)
         {

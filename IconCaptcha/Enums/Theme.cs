@@ -9,8 +9,8 @@ namespace IconCaptcha.Enums
 {
     public class Theme
     {
-        public Mode Icons { get; set; }
-        public byte[] Color { get; set; }
+        public Mode Icons { get; }
+        public byte[] Color { get; }
 
         public Theme(Mode icons, byte[] color)
         {

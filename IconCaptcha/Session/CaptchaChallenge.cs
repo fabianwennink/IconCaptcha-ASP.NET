@@ -10,50 +10,51 @@ using System.Collections.Generic;
 
 namespace IconCaptcha.Session
 {
-    public class CaptchaSessionData
+    public class CaptchaChallenge
     {
         /// <summary>
-        /// The positions of the icon on the generated image.
+        /// Positions of every icon on the challenge image.
         /// </summary>
         public List<int> Icons { get; set; } = new();
 
         /// <summary>
-        /// List of used icon IDs.
+        /// List of icon identifiers used in the challenge.
         /// </summary>
         public List<int> IconIds { get; set; } = new();
 
         /// <summary>
-        /// The icon ID of the correct answer/icon.
+        /// The icon identifier of the correct answer/icon.
         /// </summary>
         public int CorrectId { get; set; }
 
         /// <summary>
-        /// The name of the theme used by the captcha instance.
+        /// The name of the theme used by the captcha widget. The default is theme "light".
         /// </summary>
         public string Mode { get; set; } = "light";
 
         /// <summary>
-        /// If the captcha image has been requested yet.
+        /// Indicates whether the captcha challenge has been requested.
         /// </summary>
         public bool Requested { get; set; }
 
         /// <summary>
-        /// If the captcha was completed (correct icon selected) or not.
+        /// Indicates whether the captcha challenge was successfully completed.
         /// </summary>
         public bool Completed { get; set; }
 
         /// <summary>
-        /// If the captcha was completed (correct icon selected) or not.
+        /// Tracks the number of times an incorrect answer was given.
         /// </summary>
         public int Attempts { get; set; }
 
         /// <summary>
-        /// Attempts timeout.
+        /// The time at which the timeout, given to the visitor after too many incorrect
+        /// tries, expires. When the value is null, no timeout is currently active.
         /// </summary>
         public DateTime? AttemptsTimeout { get; set; }
 
         /// <summary>
-        /// This will clear the set hashes, and reset the icon request counter and last clicked icon.
+        /// Resets all data stored in the session.
         /// </summary>
         public void Clear()
         {
