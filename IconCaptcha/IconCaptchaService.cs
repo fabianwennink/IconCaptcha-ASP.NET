@@ -36,9 +36,14 @@ namespace IconCaptcha
         private const int CaptchaTokenLength = 20;
         
         /// <summary>
-        /// The default image size captcha challenge in pixels.
+        /// The default image width of a captcha challenge, in pixels.
         /// </summary>
-        private const int CaptchaImageSize = 320;
+        private const int CaptchaImageWidth = 320;
+
+        /// <summary>
+        /// The default image height of a captcha challenge, in pixels.
+        /// </summary>
+        private const int CaptchaImageHeight = 50;
 
         /// <summary>
         /// The size in pixels of each icon on the challenge image based on the amount of icons per challenge.
@@ -381,7 +386,7 @@ namespace IconCaptcha
         private int DetermineClickedIcon(int clickedXPos, int clickedYPos, int captchaWidth, int iconAmount)
         {
             // Check if the clicked position is valid.
-            if (clickedXPos < 0 || clickedXPos > captchaWidth || clickedYPos < 0 || clickedYPos > 50)
+            if (clickedXPos < 0 || clickedXPos > captchaWidth || clickedYPos < 0 || clickedYPos > CaptchaImageHeight)
             {
                 return -1;
             }
@@ -459,7 +464,7 @@ namespace IconCaptcha
                     sessionData.Icons.Count);
 
                 // Check if the selection is set and matches the position from the session.
-                if (sessionData.Icons[clickedPosition] == sessionData.CorrectId)
+                if (clickedPosition > 0 && sessionData.Icons[clickedPosition] == sessionData.CorrectId)
                 {
                     sessionData.Attempts = 0;
                     sessionData.AttemptsTimeout = null;
@@ -608,9 +613,9 @@ namespace IconCaptcha
             // Image pixel information.
             var iconCount = challenge.Icons.Count;
             var iconSize = CaptchaIconSizes[iconCount];
-            var iconOffset = (CaptchaImageSize / iconCount - 30) / 2;
-            var iconOffsetAdd = CaptchaImageSize / iconCount - iconSize;
-            var iconLineSize = CaptchaImageSize / iconCount;
+            var iconOffset = (CaptchaImageWidth / iconCount - 30) / 2;
+            var iconOffsetAdd = CaptchaImageWidth / iconCount - iconSize;
+            var iconLineSize = CaptchaImageWidth / iconCount;
 
             // Options.
             var rotateEnabled = Options.Value.Image.Rotate;

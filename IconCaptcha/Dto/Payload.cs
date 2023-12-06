@@ -5,6 +5,7 @@
     The above copyright notice and license shall be included in all copies or substantial portions of the software.
 */
 
+using System;
 using System.Text.Json.Serialization;
 using IconCaptcha.Enums;
 
@@ -31,10 +32,19 @@ namespace IconCaptcha.Dto
         public int? YPos { get; set; }
 
         /// <summary>
-        /// Width of the challenge image.
+        /// Raw, non-rounded width of the challenge image.
         /// </summary>
         [JsonPropertyName("w")]
-        public int? Width { get; set; }
+        public double? _width { get; set; }
+        
+        /// <summary>
+        /// Rounded width of the challenge image.
+        /// </summary>
+        public int? Width
+        {
+            get => _width != null ? (int)Math.Ceiling(_width.Value) : null;
+            set => _width = value;
+        }
 
         /// <summary>
         /// Action performed by the visitor/widget.
