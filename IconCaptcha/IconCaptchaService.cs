@@ -464,7 +464,7 @@ namespace IconCaptcha
                     sessionData.Icons.Count);
 
                 // Check if the selection is set and matches the position from the session.
-                if (clickedPosition > 0 && sessionData.Icons[clickedPosition] == sessionData.CorrectId)
+                if (clickedPosition > -1 && sessionData.Icons[clickedPosition] == sessionData.CorrectId)
                 {
                     sessionData.Attempts = 0;
                     sessionData.AttemptsTimeout = null;
