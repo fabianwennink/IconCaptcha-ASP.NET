@@ -57,17 +57,20 @@ namespace IconCaptcha
 
                 switch (payload.Action)
                 {
-                    case ActionType.RequestImageHashes:
+                    // The visitor initiated a challenge.
+                    case ActionType.InitiateChallenge:
                         var jsonData = JsonSerializer.Serialize(_captcha.GetCaptchaData(payload), _serializeOptions);
                         await context.Response.WriteAsync(Utils.Base64Encode(jsonData));
                         return;
                     
-                    case ActionType.SetUserChoice:
+                    // The visitor selected an icon.
+                    case ActionType.SetSelectedIcon:
                         if (_captcha.SetSelectedAnswer(payload)) {
                             return;
                         }
                         break;
                     
+                    // The captcha expired client-side, expire the challenge.
                     case ActionType.TimeExpired:
                         _captcha.InvalidateSession(payload.CaptchaId);
                         return;
