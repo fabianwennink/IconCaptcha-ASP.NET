@@ -103,7 +103,6 @@ namespace IconCaptcha
         }
         
         private CaptchaSession _session;
-
         private CaptchaSession Session
         {
             get
@@ -136,16 +135,16 @@ namespace IconCaptcha
         public string Token()
         {
             // Make sure to only generate a token if none exists.
-            if (Session.Token == null)
-            {
-                // Create a secure captcha session token.
-                var bytes = RandomNumberGenerator.GetBytes(CaptchaTokenLength);
-                var token = Convert.ToHexString(bytes);
+            if (Session.Token != null) 
+                return Session.Token;
+            
+            // Create a secure captcha session token.
+            var bytes = RandomNumberGenerator.GetBytes(CaptchaTokenLength);
+            var token = Convert.ToHexString(bytes);
 
-                Session.Token = token;
+            Session.Token = token;
 
-                SaveSession();
-            }
+            SaveSession();
 
             return Session.Token;
         }
@@ -265,48 +264,6 @@ namespace IconCaptcha
         }
         
         /// <summary>
-        /// Calculates the amount of times 1 or more other icons can be present in the captcha image besides the correct icon.
-        /// Each other icons should be at least present 1 time more than the correct icon. When calculating the icon
-        /// amount(s), the remainder of the calculation ($iconCount - $smallestIconCount) will be used.
-        /// Example 1: When $smallestIconCount is 1, and the $iconCount is 8, the return value can be [3, 4].
-        /// Example 2: When $smallestIconCount is 2, and the $iconCount is 6, the return value can be [4]. This is because
-        /// dividing the remainder (4 / 2 = 2) is equal to the $smallestIconCount, which is not possible.
-        /// Example 3: When the $smallestIconCount is 2, and the $iconCount is 8, the return value will be [3, 3].
-        /// </summary>
-        /// <param name="iconCount">The total amount of icons which will be present in the generated image.</param>
-        /// <param name="smallestIconCount">The amount of times the correct icon will be present in the generated image.</param>
-        /// <returns>The number of times an icon should be rendered onto the captcha image. Each value in the returned
-        /// array represents a new unique icon.</returns>
-        /// <exception cref="NotImplementedException"></exception>
-        private IList<int> CalculateIconAmounts(int iconCount, int smallestIconCount = 1)
-        {
-            var remainder = iconCount - smallestIconCount;
-            var remainderDivided = (decimal)remainder / 2;
-            var pickDivided = Rand.Next(1, 2) == 1; // 50/50 chance.
-
-            // If division leads to decimal.
-            if (remainderDivided % 1 != 0 && pickDivided)
-            {
-                var left = (int)Math.Floor(remainderDivided);
-                var right = (int)Math.Ceiling(remainderDivided);
-
-                // Only return the divided numbers if both are larger than the smallest number.
-                if (left > smallestIconCount && right > smallestIconCount)
-                {
-                    return new List<int> { left, right };
-                }
-            }
-            else if (pickDivided && remainderDivided > smallestIconCount)
-            {
-                // If no decimals: only return the divided numbers if it is larger than the smallest number.
-                return new List<int> { (int)remainderDivided, (int)remainderDivided };
-            }
-
-            // Return the whole remainder.
-            return new List<int> { remainder };
-        }
-
-        /// <summary>
         /// Validates the user form submission. If the captcha is incorrect, it
         /// will set the global error variable and return FALSE, else TRUE.
         /// </summary>
@@ -377,24 +334,6 @@ namespace IconCaptcha
         }
 
         /// <summary>
-        /// Returns the clicked icon position based on the X and Y position and the captcha width.
-        /// </summary>
-        /// <param name="clickedXPos">The X position of the click.</param>
-        /// <param name="clickedYPos">The Y position of the click.</param>
-        /// <param name="captchaWidth">The width of the captcha.</param>
-        /// <param name="iconAmount"></param>
-        private int DetermineClickedIcon(int clickedXPos, int clickedYPos, int captchaWidth, int iconAmount)
-        {
-            // Check if the clicked position is valid.
-            if (clickedXPos < 0 || clickedXPos > captchaWidth || clickedYPos < 0 || clickedYPos > CaptchaImageHeight)
-            {
-                return -1;
-            }
-
-            return (int)Math.Floor(clickedXPos / ((decimal)captchaWidth / iconAmount));
-        }
-
-        /// <summary>
         /// Validates the global captcha session token against the given payload token and sometimes against a header token
         /// as well. All the given tokens must match the global captcha session token to pass the check. This function
         /// will only validate the given tokens if the 'token' option is set to TRUE. If the 'token' option is set to anything
@@ -412,26 +351,24 @@ namespace IconCaptcha
             var options = Options.Value;
 
             // Only validate if the token option is enabled.
-            if (options.Token)
+            if (!options.Token) 
+                return true;
+            
+            var sessionToken = GetToken();
+
+            // If the token is empty but the option is enabled, the token was never requested.
+            if (string.IsNullOrEmpty(sessionToken))
             {
-                var sessionToken = GetToken();
-
-                // If the token is empty but the option is enabled, the token was never requested.
-                if (string.IsNullOrEmpty(sessionToken))
-                {
-                    return false;
-                }
-
-                // Validate the payload and header token (if set) against the session token.
-                if (headerToken != null)
-                {
-                    return sessionToken == payloadToken && sessionToken == headerToken;
-                }
-
-                return sessionToken == payloadToken;
+                return false;
             }
 
-            return true;
+            // Validate the payload and header token (if set) against the session token.
+            if (headerToken != null)
+            {
+                return sessionToken == payloadToken && sessionToken == headerToken;
+            }
+
+            return sessionToken == payloadToken;
         }
 
         /// <summary>
@@ -448,47 +385,47 @@ namespace IconCaptcha
         /// <returns>TRUE if the correct icon was selected, FALSE if not.</returns>
         public bool SetSelectedAnswer(Payload payload)
         {
-            if (payload != null)
+            if (payload == null) 
+                return false;
+            
+            // Check if the captcha ID and required other payload data is set.
+            if (payload.CaptchaId == default || payload.XPos == null || payload.YPos == null || payload.Width == null)
             {
-                // Check if the captcha ID and required other payload data is set.
-                if (payload.CaptchaId == default || payload.XPos == null || payload.YPos == null || payload.Width == null)
-                {
-                    return false;
-                }
+                return false;
+            }
 
-                // Initialize the session.
-                var sessionData = CreateSession(payload.CaptchaId);
+            // Initialize the session.
+            var sessionData = CreateSession(payload.CaptchaId);
 
-                // Get the clicked position.
-                var clickedPosition = DetermineClickedIcon(payload.XPos.Value, payload.YPos.Value, payload.Width.Value,
-                    sessionData.Icons.Count);
+            // Get the clicked position.
+            var clickedPosition = DetermineClickedIcon(payload.XPos.Value, payload.YPos.Value, payload.Width.Value,
+                sessionData.Icons.Count);
 
-                // Check if the selection is set and matches the position from the session.
-                if (clickedPosition > -1 && sessionData.Icons[clickedPosition] == sessionData.CorrectId)
-                {
-                    sessionData.Attempts = 0;
-                    sessionData.AttemptsTimeout = null;
-                    sessionData.Completed = true;
-
-                    SaveSession();
-
-                    return true;
-                }
-
-                sessionData.Completed = false;
-
-                // Increase the attempts counter.
-                sessionData.Attempts += 1;
-
-                // If the max amount has been reached, set a timeout (if set).
-                if (sessionData.Attempts == Options.Value.Attempts.Amount
-                    && Options.Value.Attempts.Timeout != null)
-                {
-                    sessionData.AttemptsTimeout = DateTime.Now + Options.Value.Attempts.Timeout;
-                }
+            // Check if the selection is set and matches the position from the session.
+            if (clickedPosition > -1 && sessionData.Icons[clickedPosition] == sessionData.CorrectId)
+            {
+                sessionData.Attempts = 0;
+                sessionData.AttemptsTimeout = null;
+                sessionData.Completed = true;
 
                 SaveSession();
+
+                return true;
             }
+
+            sessionData.Completed = false;
+
+            // Increase the attempts counter.
+            sessionData.Attempts += 1;
+
+            // If the max amount has been reached, set a timeout (if set).
+            if (sessionData.Attempts == Options.Value.Attempts.Amount
+                && Options.Value.Attempts.Timeout != null)
+            {
+                sessionData.AttemptsTimeout = DateTime.Now + Options.Value.Attempts.Timeout;
+            }
+
+            SaveSession();
 
             return false;
         }
@@ -653,13 +590,15 @@ namespace IconCaptcha
                 if (rotateEnabled)
                 {
                     var degree = Rand.Next(1, 4);
+                    
+                    // Only if the 'degree' is not the same as what it would already be at.
                     if (degree != 4)
                     {
-                        // Only if the 'degree' is not the same as what it would already be at.
                         var rotated = new SKBitmap(
                             degree % 2 == 0 ? icon.Width : icon.Height,
                             degree % 2 == 0 ? icon.Height : icon.Width
                         );
+                        
                         var surface = new SKCanvas(rotated);
                         surface.Translate(rotated.Width / 2, rotated.Height / 2);
                         surface.RotateDegrees(degree * 90);
@@ -721,6 +660,66 @@ namespace IconCaptcha
             var image = SKImage.FromEncodedData(file);
 
             return SKBitmap.FromImage(image);
+        }
+        
+        /// <summary>
+        /// Returns the clicked icon position based on the X and Y position and the captcha width.
+        /// </summary>
+        /// <param name="clickedXPos">The X position of the click.</param>
+        /// <param name="clickedYPos">The Y position of the click.</param>
+        /// <param name="captchaWidth">The width of the captcha.</param>
+        /// <param name="iconAmount"></param>
+        private int DetermineClickedIcon(int clickedXPos, int clickedYPos, int captchaWidth, int iconAmount)
+        {
+            // Check if the clicked position is valid.
+            if (clickedXPos < 0 || clickedXPos > captchaWidth || clickedYPos < 0 || clickedYPos > CaptchaImageHeight)
+            {
+                return -1;
+            }
+
+            return (int)Math.Floor(clickedXPos / ((decimal)captchaWidth / iconAmount));
+        }
+        
+        /// <summary>
+        /// Calculates the amount of times 1 or more other icons can be present in the captcha image besides the correct icon.
+        /// Each other icons should be at least present 1 time more than the correct icon. When calculating the icon
+        /// amount(s), the remainder of the calculation ($iconCount - $smallestIconCount) will be used.
+        /// Example 1: When $smallestIconCount is 1, and the $iconCount is 8, the return value can be [3, 4].
+        /// Example 2: When $smallestIconCount is 2, and the $iconCount is 6, the return value can be [4]. This is because
+        /// dividing the remainder (4 / 2 = 2) is equal to the $smallestIconCount, which is not possible.
+        /// Example 3: When the $smallestIconCount is 2, and the $iconCount is 8, the return value will be [3, 3].
+        /// </summary>
+        /// <param name="iconCount">The total amount of icons which will be present in the generated image.</param>
+        /// <param name="smallestIconCount">The amount of times the correct icon will be present in the generated image.</param>
+        /// <returns>The number of times an icon should be rendered onto the captcha image. Each value in the returned
+        /// array represents a new unique icon.</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private IList<int> CalculateIconAmounts(int iconCount, int smallestIconCount = 1)
+        {
+            var remainder = iconCount - smallestIconCount;
+            var remainderDivided = (decimal)remainder / 2;
+            var pickDivided = Rand.Next(1, 2) == 1; // 50/50 chance.
+
+            // If division leads to decimal.
+            if (remainderDivided % 1 != 0 && pickDivided)
+            {
+                var left = (int)Math.Floor(remainderDivided);
+                var right = (int)Math.Ceiling(remainderDivided);
+
+                // Only return the divided numbers if both are larger than the smallest number.
+                if (left > smallestIconCount && right > smallestIconCount)
+                {
+                    return new List<int> { left, right };
+                }
+            }
+            else if (pickDivided && remainderDivided > smallestIconCount)
+            {
+                // If no decimals: only return the divided numbers if it is larger than the smallest number.
+                return new List<int> { (int)remainderDivided, (int)remainderDivided };
+            }
+
+            // Return the whole remainder.
+            return new List<int> { remainder };
         }
 
         /// <summary>
