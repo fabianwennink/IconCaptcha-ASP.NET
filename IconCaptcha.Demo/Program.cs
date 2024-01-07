@@ -12,10 +12,11 @@ namespace IconCaptcha.Demo
 
             builder.Services.AddControllersWithViews();
 
-            // IconCaptcha: Required, parameter optional
+            // IconCaptcha: Required, the configuration section can be renamed.
+            // The configuration key must match the one set in the 'appsettings.json' file.
             builder.Services.AddIconCaptcha(builder.Configuration.GetSection("IconCaptcha"));
 
-            // IconCaptcha: Optional, if you want to update the configuration programmatically.
+            // IconCaptcha: Optional, can be used to programmatically alter the configuration.
             builder.Services.Configure<IconCaptchaOptions>(options =>
             {
                 // options.IconPath = "assets/icons";
@@ -27,12 +28,10 @@ namespace IconCaptcha.Demo
             app.UseAuthorization();
             app.UseSession();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+            app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            // IconCaptcha: Required 
-            app.MapIconCaptcha();
+            // IconCaptcha: Required, the endpoint can be changed to your liking.
+            app.MapIconCaptcha("/iconcaptcha");
 
             app.Run();
         }

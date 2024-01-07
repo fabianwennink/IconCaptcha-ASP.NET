@@ -29,8 +29,8 @@ namespace IconCaptcha.Session
                 return false;
             }
 
+            // Deserialize the session data.
             var sessionString = Encoding.UTF8.GetString(value);
-
             session = JsonSerializer.Deserialize<CaptchaSession>(sessionString);
 
             return true;
