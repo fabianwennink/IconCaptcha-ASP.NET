@@ -9,7 +9,7 @@
     <Summary>IconCaptcha is a self-hosted, customizable, easy-to-implement and user-friendly captcha.</Summary>
     <Product>IconCaptcha</Product>
     <Authors>Fabian Wennink</Authors>
-    <Copyright>Copyright © 2023 Fabian Wennink</Copyright>
+    <Copyright>Copyright © 2024 Fabian Wennink</Copyright>
     <Version>3.0.0</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
