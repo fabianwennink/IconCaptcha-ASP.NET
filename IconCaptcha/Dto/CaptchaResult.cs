@@ -5,6 +5,7 @@
     The above copyright notice and license shall be included in all copies or substantial portions of the software.
 */
 
+#nullable enable
 namespace IconCaptcha.Dto
 {
     public class CaptchaResult
