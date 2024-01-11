@@ -11,8 +11,9 @@
     <Authors>Fabian Wennink</Authors>
     <Copyright>Copyright © 2023 Fabian Wennink</Copyright>
     <Version>3.0.0</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://www.fabianwennink.nl/projects/IconCaptcha</PackageProjectUrl>
-    <PackageLicenseUrl>https://www.fabianwennink.nl/projects/IconCaptcha-ASP.NET/license</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/fabianwennink/IconCaptcha-ASP.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
