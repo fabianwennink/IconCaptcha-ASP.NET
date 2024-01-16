@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/fabianwennink/IconCaptcha-ASP.NET/releases"><img src="https://img.shields.io/badge/version-3.0.0-orange.svg?style=flat-square" alt="Version" /></a>
+    <a href="https://github.com/fabianwennink/IconCaptcha-ASP.NET/releases"><img src="https://img.shields.io/badge/version-3.0.1-orange.svg?style=flat-square" alt="Version" /></a>
     <a href="https://www.nuget.org/packages/IconCaptcha"><img src="https://img.shields.io/nuget/dt/IconCaptcha?style=flat-square" alt="Downloads on NuGet" /></a>
     <a href="https://fabianwennink.nl/projects/IconCaptcha-ASP.NET/license"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="License" /></a>
     <a href="https://paypal.me/nlgamevideosnl"><img src="https://img.shields.io/badge/support-PayPal-lightblue.svg?style=flat-square" alt="Support via PayPal" /></a>

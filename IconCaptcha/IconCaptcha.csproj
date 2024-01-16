@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <LangVersion>9</LangVersion>
 
     <Title>IconCaptcha</Title>
@@ -10,7 +10,7 @@
     <Product>IconCaptcha</Product>
     <Authors>Fabian Wennink</Authors>
     <Copyright>Copyright © 2024 Fabian Wennink</Copyright>
-    <Version>3.0.0</Version>
+    <Version>3.0.1</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://www.fabianwennink.nl/projects/IconCaptcha</PackageProjectUrl>
