@@ -32,7 +32,7 @@
   
   <ItemGroup>
     <!-- Embed default icons -->
-    <EmbeddedResource Include="Assets\**\*.png" LogicalName="%(RecursiveDir)%(Filename)%(Extension)"/>
+    <EmbeddedResource Include="Assets\**\*.png"/>
   </ItemGroup>
 
   <ItemGroup>
