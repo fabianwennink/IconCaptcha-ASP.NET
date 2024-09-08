@@ -10,7 +10,7 @@
     <Product>IconCaptcha</Product>
     <Authors>Fabian Wennink</Authors>
     <Copyright>Copyright © 2024 Fabian Wennink</Copyright>
-    <Version>3.0.1</Version>
+    <Version>3.0.2</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://www.fabianwennink.nl/projects/IconCaptcha</PackageProjectUrl>
