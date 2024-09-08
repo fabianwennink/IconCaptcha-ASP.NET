@@ -521,13 +521,20 @@ namespace IconCaptcha
             if (!isEmbedded)
                 return File.OpenRead(file);
 
+            var assembly = GetType().Assembly;
+            
             // Format the resource name to match the embedded resource naming convention
             var resourceRef = file.Replace('/', '.').Replace('\\', '.');
-            resourceRef = $"{GetType().Assembly.GetName().Name}.Assets.{resourceRef}";
+            resourceRef = $"{assembly.GetName().Name}.Assets.{resourceRef}";
 
             // Retrieve the embedded resource stream or throw an exception if not found
-            return GetType().Assembly.GetManifestResourceStream(resourceRef)
-                ?? throw new FileNotFoundException($"Resource '{resourceRef}' not found in embedded resources.");
+            var stream = assembly.GetManifestResourceStream(resourceRef);
+            if (stream == null)
+            {
+                throw new FileNotFoundException($"Resource '{resourceRef}' not found in embedded resources.");
+            }
+
+            return stream;
         }
 
         /// <summary>
