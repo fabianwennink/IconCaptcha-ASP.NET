@@ -488,7 +488,8 @@ namespace IconCaptcha
             var themeIconColor = Options.Value.Themes[sessionData.Mode].Icons;
             var iconPath = Path.Combine(iconsDirectoryPath, themeIconColor.ToString());
 
-            await using Stream placeholderStream = GetImageStream(isEmbedded, placeholder);
+            await using var placeholderStream = GetImageStream(isEmbedded, placeholder);
+
             // Generate the captcha image.
             var generatedImage = GenerateImage(sessionData, iconPath, placeholderStream, isEmbedded);
 
