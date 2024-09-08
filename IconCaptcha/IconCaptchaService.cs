@@ -29,12 +29,12 @@ namespace IconCaptcha
         private const string CaptchaFieldId = "ic-hf-id";
         private const string CaptchaFieldHoneypot = "ic-hf-hp";
         private const string CaptchaFieldToken = "_iconcaptcha-token";
-        
+
         /// <summary>
         /// The default length of a captcha token.
         /// </summary>
         private const int CaptchaTokenLength = 20;
-        
+
         /// <summary>
         /// The default image width of a captcha challenge, in pixels.
         /// </summary>
@@ -86,7 +86,7 @@ namespace IconCaptcha
             ["dark"] = new(Mode.dark, new byte[] { 64, 64, 64 }),
             ["legacy-dark"] = new(Mode.dark, new byte[] { 64, 64, 64 }),
         };
-        
+
         private Random Rand { get; }
 
         private ISessionProvider SessionProvider { get; }
@@ -101,7 +101,7 @@ namespace IconCaptcha
             Options = options;
             Rand = new Random();
         }
-        
+
         private CaptchaSession _session;
         private CaptchaSession Session
         {
@@ -123,7 +123,7 @@ namespace IconCaptcha
                 return _session;
             }
         }
-        
+
         /// <summary>
         /// Generates and returns a secure random string which will serve as a CSRF token for the current session. After
         /// generating the token, it will be saved in the global session variable. The length of the token will be
@@ -135,9 +135,9 @@ namespace IconCaptcha
         public string Token()
         {
             // Make sure to only generate a token if none exists.
-            if (Session.Token != null) 
+            if (Session.Token != null)
                 return Session.Token;
-            
+
             // Create a secure captcha session token.
             var bytes = RandomNumberGenerator.GetBytes(CaptchaTokenLength);
             var token = Convert.ToHexString(bytes);
@@ -200,7 +200,7 @@ namespace IconCaptcha
             var iconPositions = new int[iconAmount];
             var iconIds = new List<int>();
             var correctIconId = -1;
-            
+
             // Create a random 'icon position' order.
             var tempPositions = Enumerable.Range(0, iconAmount)
                 .OrderBy(c => Rand.Next())
@@ -262,7 +262,7 @@ namespace IconCaptcha
                 Id = payload.CaptchaId
             };
         }
-        
+
         /// <summary>
         /// Validates the user form submission. If the captcha is incorrect, it
         /// will set the global error variable and return FALSE, else TRUE.
@@ -297,7 +297,7 @@ namespace IconCaptcha
             {
                 throw new IconCaptchaSubmissionException(6, Options.Value.Messages.FormToken);
             }
-            
+
             // Initialize the session.
             var sessionData = CreateSession(captchaId);
 
@@ -351,9 +351,9 @@ namespace IconCaptcha
             var options = Options.Value;
 
             // Only validate if the token option is enabled.
-            if (!options.Token) 
+            if (!options.Token)
                 return true;
-            
+
             var sessionToken = GetToken();
 
             // If the token is empty but the option is enabled, the token was never requested.
@@ -385,9 +385,9 @@ namespace IconCaptcha
         /// <returns>TRUE if the correct icon was selected, FALSE if not.</returns>
         public bool SetSelectedAnswer(Payload payload)
         {
-            if (payload == null) 
+            if (payload == null)
                 return false;
-            
+
             // Check if the captcha ID and required other payload data is set.
             if (payload.CaptchaId == default || payload.XPos == null || payload.YPos == null || payload.Width == null)
             {
@@ -488,11 +488,9 @@ namespace IconCaptcha
             var themeIconColor = Options.Value.Themes[sessionData.Mode].Icons;
             var iconPath = Path.Combine(iconsDirectoryPath, themeIconColor.ToString());
 
-            // Generate the captcha image.
-            await using var placeholderStream = isEmbedded
-                ? GetType().Assembly.GetManifestResourceStream(placeholder)
-                : File.OpenRead(placeholder);
+            await using var placeholderStream = GetImageStream(isEmbedded, placeholder);
 
+            // Generate the captcha image.
             var generatedImage = GenerateImage(sessionData, iconPath, placeholderStream, isEmbedded);
 
             // Set the content type header to the PNG MIME-type.
@@ -509,6 +507,34 @@ namespace IconCaptcha
 
             // Show the image and exit the code
             await generatedImage.CopyToAsync(httpContext.Response.Body);
+        }
+
+        /// <summary>
+        /// Retrieves an image stream either from the file system or from embedded resources within the assembly.
+        /// </summary>
+        /// <param name="isEmbedded">Indicates whether the image is an embedded resource.</param>
+        /// <param name="file">The file path or resource name.</param>
+        /// <returns>A Stream representing the image.</returns>
+        /// <exception cref="FileNotFoundException">Thrown if the embedded resource is not found.</exception>
+        private Stream GetImageStream(bool isEmbedded, string file)
+        {
+            if (!isEmbedded)
+                return File.OpenRead(file);
+
+            var assembly = GetType().Assembly;
+            
+            // Format the resource name to match the embedded resource naming convention
+            var resourceRef = file.Replace('/', '.').Replace('\\', '.');
+            resourceRef = $"{assembly.GetName().Name}.Assets.{resourceRef}";
+
+            // Retrieve the embedded resource stream or throw an exception if not found
+            var stream = assembly.GetManifestResourceStream(resourceRef);
+            if (stream == null)
+            {
+                throw new FileNotFoundException($"Resource '{resourceRef}' not found in embedded resources.");
+            }
+
+            return stream;
         }
 
         /// <summary>
@@ -539,11 +565,7 @@ namespace IconCaptcha
                     id =>
                     {
                         var icon = Path.Combine(iconPath, $"icon-{id}.png");
-
-                        using var stream = embeddedFiles
-                            ? GetType().Assembly.GetManifestResourceStream(icon)
-                            : File.OpenRead(icon);
-
+                        using var stream = GetImageStream(embeddedFiles, icon);
                         return CreateImage(stream);
                     });
 
@@ -590,7 +612,7 @@ namespace IconCaptcha
                 if (rotateEnabled)
                 {
                     var degree = Rand.Next(1, 4);
-                    
+
                     // Only if the 'degree' is not the same as what it would already be at.
                     if (degree != 4)
                     {
@@ -598,7 +620,7 @@ namespace IconCaptcha
                             degree % 2 == 0 ? icon.Width : icon.Height,
                             degree % 2 == 0 ? icon.Height : icon.Width
                         );
-                        
+
                         var surface = new SKCanvas(rotated);
                         surface.Translate(rotated.Width / 2, rotated.Height / 2);
                         surface.RotateDegrees(degree * 90);
@@ -661,7 +683,7 @@ namespace IconCaptcha
 
             return SKBitmap.FromImage(image);
         }
-        
+
         /// <summary>
         /// Returns the clicked icon position based on the X and Y position and the captcha width.
         /// </summary>
@@ -679,7 +701,7 @@ namespace IconCaptcha
 
             return (int)Math.Floor(clickedXPos / ((decimal)captchaWidth / iconAmount));
         }
-        
+
         /// <summary>
         /// Calculates the amount of times 1 or more other icons can be present in the captcha image besides the correct icon.
         /// Each other icons should be at least present 1 time more than the correct icon. When calculating the icon
@@ -749,7 +771,7 @@ namespace IconCaptcha
 
                 Session.Add(identifier, sessionData);
             }
-            
+
             return sessionData;
         }
 
